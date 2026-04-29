@@ -159,6 +159,17 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
   </div>
 </header>
 
+<!-- PAINEL CONFIG SHEET ID -->
+<div id="cfg-panel" style="background:rgba(0,212,255,0.06);border-bottom:1px solid #1a2540;padding:10px 20px;display:flex;align-items:center;gap:10px;position:relative;z-index:1;flex-wrap:wrap">
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#5a7090">Google Sheet ID:</span>
+  <input id="sheetId" type="text"
+    placeholder="Cole aqui o ID da planilha (ex: 1BxiM...)"
+    style="flex:1;min-width:280px;background:#05080f;border:1px solid #1a2540;color:#c8d8f0;font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;border-radius:3px;outline:none"
+    oninput="localStorage.setItem('smg15_sheet_id',this.value)">
+  <button onclick="loadData()" style="background:#00d4ff;border:none;color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 16px;border-radius:3px;cursor:pointer">▶ Carregar</button>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5a7090">Planilha > Arquivo > Compartilhar > Publicar na web → copie o ID da URL</span>
+</div>
+
 <div class="tabs">
   <div class="tab active" onclick="swTab('mapa',this)">🗺 Mapa de Vagas</div>
   <div class="tab" onclick="swTab('hist',this)">📊 Histórico por Turno</div>
@@ -309,32 +320,109 @@ function swTab(id,btn){
   btn.classList.add('active');
 }
 
+// ── CONFIGURAÇÃO DA PLANILHA ────────────────────────────────
+// Cole aqui a URL de publicação da sua planilha Google Sheets
+// Planilha > Arquivo > Compartilhar > Publicar na Web > CSV
+let SHEET_ID = localStorage.getItem('smg15_sheet_id') || '';
+
 // ── LOAD ────────────────────────────────────────────────────
 function loadData(){
-  const date=document.getElementById('cfgDate').value||new Date().toISOString().slice(0,10);
-  showLov('Consultando BigQuery YMS...');
+  const sid = document.getElementById('sheetId')?.value?.trim() || SHEET_ID;
+  if(!sid){
+    showCfgPanel();
+    hideLov();
+    return;
+  }
+  SHEET_ID = sid;
+  localStorage.setItem('smg15_sheet_id',sid);
+
+  showLov('Lendo dados da planilha BigQuery...');
   setApi('load','Carregando...');
 
-  if(typeof google!=='undefined'&&google.script){
-    // Hospedado no Apps Script — usa BigQuery
-    google.script.run
-      .withSuccessHandler(onLoaded)
-      .withFailureHandler(onErr)
-      .getDashboardData({date,historico:7});
-  } else {
-    // Hospedado no GitHub Pages — tenta API Meli (funciona se estiver no portal)
-    // Se der CORS, carrega demo automaticamente
-    const cycleId=`SMG15_${date.replace(/-/g,'')}_PM1_0`;
-    const url=`https://envios.adminml.com/logistics/last-mile/monitoring/api/ops-clock/waves-status?cycleId=${encodeURIComponent(cycleId)}&date=${date}`;
-    
-    const controller = new AbortController();
-    const timeout = setTimeout(()=>controller.abort(), 8000);
-    
-    fetch(url, {credentials:'include', headers:{'accept':'application/json'}, signal:controller.signal, mode:'cors'})
-      .then(r=>{ clearTimeout(timeout); if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
-      .then(j=>onLoaded(mapMeliApi(j,date)))
-      .catch(()=>{ clearTimeout(timeout); loadDemoWithNote(); });
-  }
+  // Lê aba DOCAS_LIVE
+  const urlDocas = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=DOCAS_LIVE`;
+  const urlHist  = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=HISTORICO`;
+  const urlMeta  = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=META`;
+
+  Promise.all([
+    fetch(urlDocas).then(r=>r.text()),
+    fetch(urlHist).then(r=>r.text()),
+    fetch(urlMeta).then(r=>r.text()).catch(()=>''),
+  ])
+  .then(([csvDocas, csvHist, csvMeta]) => {
+    const docasRows  = parseCSV(csvDocas);
+    const histRows   = parseCSV(csvHist);
+    const metaRows   = parseCSV(csvMeta);
+    const updatedAt  = metaRows.find(r=>r.UPDATED_AT==='UPDATED_AT' || r[0]==='UPDATED_AT')?.[1]
+                    || metaRows[0]?.B || new Date().toISOString();
+    onLoadedSheets(docasRows, histRows, updatedAt);
+  })
+  .catch(e => {
+    hideLov();
+    setApi('err','Erro Sheets');
+    showErr('Erro ao ler planilha: '+e.message+'. Verifique se o Sheet ID está correto e a planilha está publicada na web.');
+  });
+}
+
+// ── PARSE CSV ────────────────────────────────────────────────
+function parseCSV(csv){
+  if(!csv||!csv.trim())return[];
+  const lines=csv.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+  return lines.slice(1).map(line=>{
+    const vals=line.match(/(".*?"|[^,]+|(?<=,)(?=,)|^(?=,)|(?<=,)$)/g)||[];
+    const obj={};
+    headers.forEach((h,i)=>{ obj[h]=(vals[i]||'').replace(/"/g,'').trim(); });
+    return obj;
+  });
+}
+
+// ── PROCESSA DADOS DO SHEETS ─────────────────────────────────
+function onLoadedSheets(docasRows, histRows, updatedAt){
+  hideLov();
+  setApi('ok','BigQuery via Sheets ✓');
+
+  // Monta array de 75 docas a partir da planilha
+  docas=Array.from({length:TOTAL},(_,i)=>{
+    const n=i+1;
+    const r=docasRows.find(row=>parseInt(row.DOCA_NUM||row['DOCA_NUM']||0)===n);
+    if(!r||!r.STATUS||r.STATUS==='livre'&&!r.PLACA)
+      return{id:n,label:String(n).padStart(2,'0'),status:'livre',monitor:false,
+        inicio:null,rota:'—',placa:'—',veiculo:'—',transportadora:'—',
+        operation:'—',mile:'—',qty:0,stay:null,gateIn:null,gateOut:null,dckIn:null,dckOut:null};
+
+    const mon=!['livre','expedida'].includes(r.STATUS||'livre');
+    const inicioStr=r.INICIO_STATUS||r.DOCA_CHECKIN||'';
+    const inicio=inicioStr&&inicioStr!==''?new Date(inicioStr).getTime():null;
+    return{
+      id:n, label:String(n).padStart(2,'0'),
+      status:r.STATUS||'livre', monitor:mon, inicio,
+      rota:r.ROTA||'—', placa:r.PLACA||'—',
+      veiculo:r.TIPO_VEICULO||'—', transportadora:r.TRANSPORTADORA||'—',
+      operation:r.OPERACAO||'—', mile:r.MILE||'—',
+      qty:parseInt(r.QTD_SHIPMENTS||0),
+      stay:r.PERMANENCIA_MIN||null,
+      gateIn:r.GATE_CHECKIN||null, gateOut:r.GATE_CHECKOUT||null,
+      dckIn:r.DOCA_CHECKIN||null, dckOut:r.DOCA_CHECKOUT||null,
+    };
+  });
+
+  // Processa histórico
+  histData=histRows.map(r=>({
+    date:r.DATA||r.DATA_REF||'',
+    turno:r.TURNO||'',
+    total:parseInt(r.TOTAL||0),
+    comCheckout:parseInt(r.COM_CHECKOUT||0),
+    stayAvg:parseInt(r.STAY_AVG_MIN||0),
+    dentro30:parseInt(r.DENTRO_30||0),
+    acima30:parseInt(r.ACIMA_30||0),
+    pctOntime:parseInt(r.PCT_ONTIME||0),
+  }));
+
+  document.getElementById('st').textContent=docasRows.filter(r=>r.PLACA&&r.PLACA!=='').length;
+  document.getElementById('lut').textContent=new Date(updatedAt).toLocaleTimeString('pt-BR');
+  renderFloor();updateSum();renderHist();renderDetalhe();
+  nxt=60;
 }
 
 function mapMeliApi(j,date){
@@ -389,7 +477,7 @@ function onErr(e){
   loadDemo();
 }
 
-function loadDemoWithNote(){
+function loadDemoWithNote(){ setApi('ok','Demo'); 
   // Dados demo — para dados reais abra no mesmo browser logado no portal Meli
   setApi('ok','Demo — Abra no portal Meli para dados reais');
   loadDemo();
@@ -668,12 +756,21 @@ function dl(csv,nm){const a=document.createElement('a');a.href=URL.createObjectU
 function el(d){if(!d.inicio)return 0;return Math.max(0,Math.floor((Date.now()-d.inicio)/1000));}
 function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 function tier(s){if(s>=TC)return'critical';if(s>=TW)return'warn';return'ok';}
+function showCfgPanel(){
+  const p=document.getElementById('cfg-panel');
+  if(p){ p.style.background='rgba(255,107,53,0.1)'; p.style.borderColor='rgba(255,107,53,0.4)'; }
+  document.getElementById('sheetId')?.focus();
+}
+
 function showLov(t){document.getElementById('ltx').textContent=t;document.getElementById('lov').classList.remove('hidden');}
 function hideLov(){document.getElementById('lov').classList.add('hidden');}
 function showErr(m){document.getElementById('emsg').textContent=m;document.getElementById('eb').classList.add('show');}
 function setApi(s,t){const d=document.getElementById('adot'),l=document.getElementById('astat');d.className='adot '+s;l.textContent=t;l.style.color=s==='ok'?'var(--ok)':s==='err'?'var(--alert)':'var(--warn)';}
 
 window.addEventListener('load',()=>{
+  // Restaura Sheet ID salvo
+  const saved=localStorage.getItem('smg15_sheet_id');
+  if(saved){ const el=document.getElementById('sheetId'); if(el) el.value=saved; SHEET_ID=saved; }
   docas=Array.from({length:TOTAL},(_,i)=>({id:i+1,label:String(i+1).padStart(2,'0'),status:'livre',monitor:false,inicio:null,rota:'—',placa:'—',veiculo:'—',transportadora:'—',operation:'—',mile:'—',qty:0,stay:null,gateIn:null,gateOut:null,dckIn:null,dckOut:null}));
   renderFloor();
   loadData();
