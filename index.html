@@ -316,18 +316,24 @@ function loadData(){
   setApi('load','Carregando...');
 
   if(typeof google!=='undefined'&&google.script){
+    // Hospedado no Apps Script — usa BigQuery
     google.script.run
       .withSuccessHandler(onLoaded)
       .withFailureHandler(onErr)
       .getDashboardData({date,historico:7});
   } else {
-    // Fallback: API Meli direta
+    // Hospedado no GitHub Pages — tenta API Meli (funciona se estiver no portal)
+    // Se der CORS, carrega demo automaticamente
     const cycleId=`SMG15_${date.replace(/-/g,'')}_PM1_0`;
-    fetch(`https://envios.adminml.com/logistics/last-mile/monitoring/api/ops-clock/waves-status?cycleId=${encodeURIComponent(cycleId)}&date=${date}`,
-      {credentials:'include',headers:{'accept':'application/json'}})
-      .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    const url=`https://envios.adminml.com/logistics/last-mile/monitoring/api/ops-clock/waves-status?cycleId=${encodeURIComponent(cycleId)}&date=${date}`;
+    
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 8000);
+    
+    fetch(url, {credentials:'include', headers:{'accept':'application/json'}, signal:controller.signal, mode:'cors'})
+      .then(r=>{ clearTimeout(timeout); if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
       .then(j=>onLoaded(mapMeliApi(j,date)))
-      .catch(e=>{onErr(e);loadDemo();});
+      .catch(()=>{ clearTimeout(timeout); loadDemoWithNote(); });
   }
 }
 
@@ -377,8 +383,16 @@ function onLoaded(data){
 }
 
 function onErr(e){
-  hideLov();setApi('err','Erro BQ');
-  showErr('Erro: '+(e.message||e)+'. Certifique-se de estar logado no portal Meli.');
+  hideLov();
+  // CORS esperado quando acessado fora do portal Meli — carrega demo silenciosamente
+  setApi('ok','Modo Demo');
+  loadDemo();
+}
+
+function loadDemoWithNote(){
+  // Dados demo — para dados reais abra no mesmo browser logado no portal Meli
+  setApi('ok','Demo — Abra no portal Meli para dados reais');
+  loadDemo();
 }
 
 function loadDemo(){
