@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMG15 — OnTime Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05080f;--panel:#0b1120;--border:#1a2540;--accent:#00d4ff;--ok:#00e676;--warn:#ffea00;--alert:#ff4444;--crit:#ff0000;--text:#c8d8f0;--dim:#5a7090;--fm:'Rajdhani',sans-serif;--fmono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--fm);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.012) 2px,rgba(0,212,255,.012) 4px);pointer-events:none;z-index:0}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(5,8,15,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between}
+.hl{display:flex;align-items:center;gap:12px}
+.badge{background:var(--accent);color:#000;font-family:var(--fmono);font-weight:700;font-size:11px;padding:3px 10px;border-radius:2px;letter-spacing:2px}
+.ptitle{font-size:17px;font-weight:700;letter-spacing:2px;color:#fff;text-transform:uppercase}
+.hr2{display:flex;align-items:center;gap:16px}
+.adot{width:8px;height:8px;border-radius:50%;background:#555;display:inline-block;margin-right:5px;transition:background .3s}
+.adot.ok{background:var(--ok);animation:pl 1.4s ease infinite}
+.adot.err{background:var(--alert)}
+.adot.load{background:var(--warn);animation:pl .6s ease infinite}
+@keyframes pl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.clock{font-family:var(--fmono);font-size:18px;font-weight:700;color:var(--accent);letter-spacing:3px}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:1}
+.tab{padding:12px 22px;font-family:var(--fmono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* SUMMARY BAR */
+.sbar{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1}
+.sc{background:var(--panel);padding:9px 12px;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.s0::before{background:var(--accent)}.s1::before{background:#4cff8a}.s2::before{background:var(--ok)}.s3::before{background:var(--warn)}.s4::before{background:var(--crit)}.s5::before{background:#a78bfa}.s6::before{background:#ff6b35}
+.slbl{font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim)}
+.sval{font-family:var(--fmono);font-size:24px;font-weight:700;line-height:1}
+.s0 .sval{color:var(--accent)}.s1 .sval{color:#4cff8a}.s2 .sval{color:var(--ok)}.s3 .sval{color:var(--warn)}.s4 .sval{color:var(--crit)}.s5 .sval{color:#a78bfa}.s6 .sval{color:#ff6b35}
+.ssub{font-family:var(--fmono);font-size:9px;color:var(--dim)}
+
+/* MAIN */
+.main{padding:14px 20px;position:relative;z-index:1}
+.tp{display:none}.tp.active{display:block}
+
+/* CONTROLS */
+.ctrl{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.btn{background:transparent;border:1px solid var(--border);color:var(--dim);font-family:var(--fmono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 11px;cursor:pointer;border-radius:2px;transition:all .15s}
+.btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.btn.prim{border-color:var(--accent);color:var(--accent)}.btn.prim:hover{background:var(--accent);color:#000}
+.spacer{flex:1}
+input[type=date]{background:#05080f;border:1px solid var(--border);color:var(--text);font-family:var(--fmono);font-size:10px;padding:5px 8px;border-radius:3px;outline:none}
+input[type=date]:focus{border-color:var(--accent)}
+.szsld{-webkit-appearance:none;width:70px;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+.szsld::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+/* LEGEND */
+.leg{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:6px;font-family:var(--fmono);font-size:9px;color:var(--dim)}
+.lb{width:13px;height:13px;border-radius:2px}
+
+/* WAREHOUSE */
+.wh{background:var(--panel);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.whh{padding:8px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(0,212,255,.03)}
+.wht{font-family:var(--fmono);font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent)}
+.whs{font-family:var(--fmono);font-size:9px;color:var(--dim)}
+.whf{padding:14px;overflow-x:auto}
+.clbl{font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);text-align:center;padding:5px;margin:5px 0;border-top:1px dashed rgba(255,255,255,.05);border-bottom:1px dashed rgba(255,255,255,.05);background:rgba(0,212,255,.02)}
+.drow{display:flex;gap:5px;margin-bottom:5px;flex-wrap:nowrap}
+
+/* DOCK CELL */
+.dc{border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid transparent;overflow:hidden;user-select:none;position:relative;transition:transform .12s,box-shadow .12s}
+.dc:hover{transform:scale(1.1);z-index:10;box-shadow:0 4px 20px rgba(0,0,0,.6)}
+.dn{font-family:var(--fmono);font-weight:700;line-height:1;color:rgba(255,255,255,.9)}
+.dst{font-family:var(--fmono);font-size:7px;text-transform:uppercase;color:rgba(255,255,255,.5);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 2px}
+.dtm{font-family:var(--fmono);font-size:8px;font-weight:700;color:rgba(255,255,255,.8);line-height:1}
+.dpb{position:absolute;bottom:0;left:0;height:3px}
+.c-livre{background:#0d2b1a;border-color:rgba(76,255,138,.18)}
+.c-ok{background:#0d2520;border-color:rgba(0,230,118,.28)}
+.c-warn{background:#2a2200;border-color:rgba(255,234,0,.4);box-shadow:0 0 8px rgba(255,234,0,.12)}
+.c-crit{background:#1f0000;border-color:rgba(255,0,0,.6);animation:bc .8s ease infinite}
+.c-unk{background:#0d1020;border-color:rgba(255,255,255,.07)}
+@keyframes bc{0%,100%{border-color:rgba(255,0,0,.7);box-shadow:0 0 12px rgba(255,0,0,.35)}50%{border-color:rgba(255,0,0,.15);box-shadow:none}}
+.c-livre .dn{color:rgba(76,255,138,.7)}.c-ok .dn{color:rgba(0,230,118,.9)}.c-warn .dn{color:rgba(255,234,0,.95)}.c-crit .dn{color:#ff3c3c;animation:nf .8s ease infinite}
+@keyframes nf{0%,100%{opacity:1}50%{opacity:.35}}
+.c-warn .dpb{background:var(--warn)}.c-ok .dpb{background:var(--ok)}.c-crit .dpb{background:var(--crit)}
+
+/* TOOLTIP */
+.tt{position:fixed;background:#0e1828;border:1px solid var(--border);border-radius:4px;padding:10px 14px;pointer-events:none;z-index:999;min-width:220px;max-width:300px;box-shadow:0 8px 30px rgba(0,0,0,.8);display:none}
+.tt.show{display:block}
+.tth{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.ttid{font-family:var(--fmono);font-size:13px;font-weight:700;color:#fff}
+.ttbg{font-family:var(--fmono);font-size:8px;text-transform:uppercase;letter-spacing:1px;padding:2px 7px;border-radius:2px}
+.ttr{display:flex;justify-content:space-between;gap:8px;margin-bottom:3px}
+.ttl{color:var(--dim);font-family:var(--fmono);font-size:9px}.ttv{color:#e0eeff;font-family:var(--fmono);font-size:10px;text-align:right;flex:1}
+.tttm{text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-family:var(--fmono);font-size:22px;font-weight:700}
+
+/* ALERT LOG */
+.ap{margin-top:14px;background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.aph{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(255,0,0,.04)}
+.apt{font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--alert);display:flex;align-items:center;gap:8px}
+.apb{background:var(--crit);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px}
+.apl{max-height:110px;overflow-y:auto}
+.apl::-webkit-scrollbar{width:3px}.apl::-webkit-scrollbar-thumb{background:var(--border)}
+.apr{padding:5px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.025);font-family:var(--fmono);font-size:10px;animation:sli .3s ease}
+@keyframes sli{from{transform:translateX(-8px);opacity:0}to{transform:translateX(0);opacity:1}}
+.aptm{color:var(--dim);min-width:38px}.apdc{color:var(--alert);font-weight:700;min-width:55px}.apmg{color:var(--text);flex:1;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.apel{color:var(--crit);font-weight:700}
+
+/* HISTÓRICO TABLE */
+.ht{width:100%;border-collapse:collapse;font-family:var(--fmono);font-size:11px}
+.ht th{padding:8px 12px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);border-bottom:1px solid var(--border)}
+.ht td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text)}
+.ht tr:hover td{background:rgba(255,255,255,.03)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700}
+.pAM1{background:rgba(0,212,255,.15);color:var(--accent);border:1px solid rgba(0,212,255,.3)}
+.pPM1{background:rgba(255,107,53,.15);color:#ff6b35;border:1px solid rgba(255,107,53,.3)}
+.pAM2{background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
+.pPM2{background:rgba(255,234,0,.15);color:var(--warn);border:1px solid rgba(255,234,0,.3)}
+.pMN{background:rgba(90,112,144,.15);color:var(--dim);border:1px solid rgba(90,112,144,.3)}
+
+/* DETALHE EXTRA */
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.det-item{background:rgba(0,0,0,.3);border-radius:3px;padding:8px 10px}
+.det-lbl{font-family:var(--fmono);font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:3px}
+.det-val{font-family:var(--fmono);font-size:12px;font-weight:600;color:#e0eeff}
+
+/* loading */
+.lov{position:fixed;inset:0;background:rgba(5,8,15,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+.lov.hidden{display:none}
+.lsp{width:40px;height:40px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ltx{font-family:var(--fmono);font-size:12px;color:var(--dim);letter-spacing:2px;text-transform:uppercase}
+
+/* error */
+.eb{background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);border-radius:4px;padding:10px 16px;margin-bottom:12px;font-family:var(--fmono);font-size:11px;color:var(--alert);display:none;align-items:center;gap:10px}
+.eb.show{display:flex}
+
+.lu{font-family:var(--fmono);font-size:9px;color:var(--dim);text-align:right;margin-top:6px}
+footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:var(--fmono);font-size:9px;color:var(--dim);position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<div class="lov" id="lov"><div class="lsp"></div><div class="ltx" id="ltx">Carregando BigQuery...</div></div>
+
+<header>
+  <div class="hl">
+    <span class="badge">SMG15</span>
+    <span class="ptitle">OnTime Monitor — Live</span>
+  </div>
+  <div class="hr2">
+    <div style="display:flex;align-items:center;font-family:var(--fmono);font-size:10px">
+      <span class="adot load" id="adot"></span>
+      <span id="astat" style="color:var(--dim)">Conectando...</span>
+    </div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="swTab('mapa',this)">🗺 Mapa de Vagas</div>
+  <div class="tab" onclick="swTab('hist',this)">📊 Histórico por Turno</div>
+  <div class="tab" onclick="swTab('detalhe',this)">🔍 Detalhe YMS</div>
+</div>
+
+<div class="sbar">
+  <div class="sc s0"><div class="slbl">Total YMS</div><div class="sval" id="st">—</div><div class="ssub">entradas hoje</div></div>
+  <div class="sc s1"><div class="slbl">Livres</div><div class="sval" id="sl">—</div><div class="ssub">doca disponível</div></div>
+  <div class="sc s2"><div class="slbl">Dentro Prazo</div><div class="sval" id="so">—</div><div class="ssub">≤ 20 min</div></div>
+  <div class="sc s3"><div class="slbl">Atenção</div><div class="sval" id="sw">—</div><div class="ssub">20–30 min</div></div>
+  <div class="sc s4"><div class="slbl">Estourou!</div><div class="sval" id="sc2">—</div><div class="ssub">&gt;30 min 🚨</div></div>
+  <div class="sc s5"><div class="slbl">Tempo Médio</div><div class="sval" id="savg">—</div><div class="ssub">min na doca</div></div>
+  <div class="sc s6"><div class="slbl">% Ontime</div><div class="sval" id="spct">—</div><div class="ssub">dentro de 30 min</div></div>
+</div>
+
+<div class="main">
+
+<!-- TAB MAPA -->
+<div class="tp active" id="tp-mapa">
+  <div class="eb" id="eb"><span>⚠</span><span id="emsg">Erro.</span><span style="margin-left:auto;cursor:pointer" onclick="this.closest('.eb').classList.remove('show')">✕</span></div>
+  <div class="ctrl">
+    <button class="btn active" onclick="setFil('all',this)">Todas</button>
+    <button class="btn" onclick="setFil('livre',this)">Livres</button>
+    <button class="btn" onclick="setFil('uso',this)">Em Uso</button>
+    <button class="btn" onclick="setFil('warn',this)">Atenção</button>
+    <button class="btn" onclick="setFil('crit',this)">Críticas</button>
+    <div class="spacer"></div>
+    <input type="date" id="cfgDate">
+    <button class="btn prim" onclick="loadData()">▶ Atualizar</button>
+    <span style="font-family:var(--fmono);font-size:9px;color:var(--dim)">Zoom:</span>
+    <input type="range" class="szsld" min="40" max="82" value="58" id="szsl" oninput="resz(this.value)">
+    <button class="btn" onclick="expCSV()">⬇ CSV</button>
+  </div>
+  <div class="leg">
+    <div class="li"><div class="lb" style="background:#0d2b1a;border:1px solid rgba(76,255,138,.25)"></div>Livre / Expedida</div>
+    <div class="li"><div class="lb" style="background:#0d2520;border:1px solid rgba(0,230,118,.3)"></div>Em Processo ≤20 min</div>
+    <div class="li"><div class="lb" style="background:#2a2200;border:1px solid rgba(255,234,0,.4)"></div>Atenção 20–30 min</div>
+    <div class="li"><div class="lb" style="background:#1f0000;border:1px solid rgba(255,0,0,.5)"></div>Crítico &gt;30 min 🚨</div>
+  </div>
+  <div class="wh">
+    <div class="whh">
+      <span class="wht">🏭 Mapa de Vagas — SMG15 | Docas 01–75</span>
+      <span class="whs" id="whs">Fonte: BigQuery YMS Gate · Hover = detalhes · Clique = modal</span>
+    </div>
+    <div class="whf" id="whf"></div>
+  </div>
+  <div class="lu">Atualização: <span id="lut">—</span> &nbsp;|&nbsp; Próximo refresh: <span id="lun">60s</span></div>
+  <div class="ap">
+    <div class="aph">
+      <div class="apt">⚠ Alertas OnTime &gt;30 min <span class="apb" id="apb">0</span></div>
+      <button class="btn" onclick="clrAl()" style="padding:2px 8px">Limpar</button>
+    </div>
+    <div class="apl" id="apl"></div>
+  </div>
+</div>
+
+<!-- TAB HISTÓRICO -->
+<div class="tp" id="tp-hist">
+  <div class="ctrl">
+    <button class="btn active" onclick="loadHist(7,this)">7 dias</button>
+    <button class="btn" onclick="loadHist(14,this)">14 dias</button>
+    <button class="btn" onclick="loadHist(30,this)">30 dias</button>
+    <div class="spacer"></div>
+    <button class="btn" onclick="expHist()">⬇ CSV Histórico</button>
+  </div>
+  <div class="wh">
+    <div class="whh">
+      <span class="wht">📊 Histórico por Turno — SMG15</span>
+      <span class="whs">Fonte: BigQuery · Gate_Facility_StayTimeMinutes</span>
+    </div>
+    <div style="padding:14px;overflow-x:auto">
+      <table class="ht">
+        <thead><tr>
+          <th>Data</th><th>Turno</th><th>Entradas YMS</th><th>Com Saída</th>
+          <th>Tempo Médio Doca</th><th>Dentro 30 min</th><th>Acima 30 min</th><th>% Ontime</th>
+        </tr></thead>
+        <tbody id="hbody"><tr><td colspan="8" style="text-align:center;color:var(--dim);padding:30px">Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB DETALHE YMS -->
+<div class="tp" id="tp-detalhe">
+  <div class="ctrl">
+    <span style="font-family:var(--fmono);font-size:9px;color:var(--dim)">Buscar placa ou rota:</span>
+    <input id="srch" type="text" placeholder="ex: ABC-1234" style="background:#05080f;border:1px solid var(--border);color:var(--text);font-family:var(--fmono);font-size:11px;padding:5px 10px;border-radius:3px;outline:none;width:180px" oninput="renderDetalhe()">
+    <div class="spacer"></div>
+    <button class="btn" onclick="expRaw()">⬇ CSV Raw YMS</button>
+  </div>
+  <div class="wh">
+    <div class="whh">
+      <span class="wht">🔍 Detalhe Completo YMS — SMG15</span>
+      <span class="whs">Todos os campos retornados pelo BigQuery</span>
+    </div>
+    <div style="padding:14px;overflow-x:auto;max-height:500px;overflow-y:auto">
+      <table class="ht" id="dtbl">
+        <thead><tr>
+          <th>Doca</th><th>Placa</th><th>Transportadora</th><th>Operação</th><th>Mile</th>
+          <th>Checkin Gate</th><th>Checkout Gate</th><th>Checkin Doca</th><th>Checkout Doca</th>
+          <th>Permanência</th><th>Qtd Ship</th><th>Rota</th>
+        </tr></thead>
+        <tbody id="dbody"><tr><td colspan="12" style="text-align:center;color:var(--dim);padding:30px">Carregue os dados primeiro</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<footer>
+  <span>SMG15 — Last Mile OnTime Monitor | BigQuery: meli-bi-data.WHOWNER.BT_SHP_MT_YMS_GATE</span>
+  <span id="fdt"></span>
+</footer>
+
+<div class="tt" id="tt"></div>
+
+<script>
+const TW=20*60,TC=30*60,TOTAL=75;
+const SL={livre:'Livre',aduana:'Aduana',contagem:'Contagem',gaiola:'Ag.Gaiola',finalizado:'Finalizado',expedida:'Expedida'};
+const BLOCKS=[
+  {l:'▶ Corredor A — Docas 01–15',s:1,e:15},
+  {l:'▶ Corredor B — Docas 16–30',s:16,e:30},
+  {l:'▶ Corredor C — Docas 31–45',s:31,e:45},
+  {l:'▶ Corredor D — Docas 46–60',s:46,e:60},
+  {l:'▶ Corredor E — Docas 61–75',s:61,e:75},
+];
+
+let docas=[],rawData=null,histData=[],alLog=[],aled=new Set(),csz=58,cFil='all',nxt=60;
+
+// init
+document.getElementById('cfgDate').value=new Date().toISOString().slice(0,10);
+
+// clock
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString('pt-BR');
+  document.getElementById('fdt').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  if(nxt>0)nxt--;
+  document.getElementById('lun').textContent=nxt+'s';
+},1000);
+
+function swTab(id,btn){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tp-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── LOAD ────────────────────────────────────────────────────
+function loadData(){
+  const date=document.getElementById('cfgDate').value||new Date().toISOString().slice(0,10);
+  showLov('Consultando BigQuery YMS...');
+  setApi('load','Carregando...');
+
+  if(typeof google!=='undefined'&&google.script){
+    google.script.run
+      .withSuccessHandler(onLoaded)
+      .withFailureHandler(onErr)
+      .getDashboardData({date,historico:7});
+  } else {
+    // Fallback: API Meli direta
+    const cycleId=`SMG15_${date.replace(/-/g,'')}_PM1_0`;
+    fetch(`https://envios.adminml.com/logistics/last-mile/monitoring/api/ops-clock/waves-status?cycleId=${encodeURIComponent(cycleId)}&date=${date}`,
+      {credentials:'include',headers:{'accept':'application/json'}})
+      .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+      .then(j=>onLoaded(mapMeliApi(j,date)))
+      .catch(e=>{onErr(e);loadDemo();});
+  }
+}
+
+function mapMeliApi(j,date){
+  const dm={};
+  const routes=j.waves?j.waves.flatMap(w=>w.routes||[]):(j.routes||[]);
+  routes.forEach(r=>{
+    const n=parseInt(r.dockId||r.dock||0);
+    if(!n||n>75)return;
+    const sm={CUSTOMS_IN_PROGRESS:'aduana',DRIVER_COUNTING:'contagem',WAITING_CAGE:'gaiola',
+      PROCESS_FINISHED:'finalizado',DISPATCHED:'expedida',CONCLUDED:'expedida'};
+    const st=sm[(r.status||'').toUpperCase()]||'aduana';
+    dm[n]={dockNum:n,dockName:'Doca '+n,routeId:r.routeId||'—',placa:r.vehicle?.plate||'—',
+      veiculo:'—',transportadora:r.carrier||'—',operation:r.status||'—',
+      mile:r.mile||'LAST',qtyShipment:r.packages||0,status:st,
+      inicioMs:r.statusStartTime?new Date(r.statusStartTime).getTime():null,
+      stayMinutes:null,gateCheckin:r.statusStartTime,gateCheckout:null,dckCheckin:r.statusStartTime,dckCheckout:null};
+  });
+  return{date,docas:dm,totalRoutes:routes.length,updatedAt:new Date().toISOString(),historicoTurno:[]};
+}
+
+function onLoaded(data){
+  rawData=data;
+  hideLov();
+  setApi('ok','BigQuery ✓ YMS');
+
+  docas=Array.from({length:TOTAL},(_,i)=>{
+    const n=i+1,d=data.docas?data.docas[n]:null;
+    if(!d)return{id:n,label:String(n).padStart(2,'0'),status:'livre',monitor:false,inicio:null,
+      rota:'—',placa:'—',veiculo:'—',transportadora:'—',operation:'—',mile:'—',qty:0,stay:null,
+      gateIn:null,gateOut:null,dckIn:null,dckOut:null};
+    const mon=!['livre','expedida'].includes(d.status);
+    const inicio=d.inicioMs||(d.dckCheckin?new Date(d.dckCheckin).getTime():null);
+    return{id:n,label:String(n).padStart(2,'0'),status:d.status,monitor:mon,inicio,
+      rota:d.routeId||'—',placa:d.placa||'—',veiculo:d.veiculo||'—',
+      transportadora:d.transportadora||'—',operation:d.operation||'—',
+      mile:d.mile||'—',qty:d.qtyShipment||0,stay:d.stayMinutes,
+      gateIn:d.gateCheckin,gateOut:d.gateCheckout,dckIn:d.dckCheckin,dckOut:d.dckCheckout};
+  });
+
+  histData=data.historicoTurno||[];
+  document.getElementById('st').textContent=data.totalRoutes||0;
+  document.getElementById('lut').textContent=new Date().toLocaleTimeString('pt-BR');
+
+  renderFloor();updateSum();renderHist();renderDetalhe();
+  nxt=60;
+}
+
+function onErr(e){
+  hideLov();setApi('err','Erro BQ');
+  showErr('Erro: '+(e.message||e)+'. Certifique-se de estar logado no portal Meli.');
+}
+
+function loadDemo(){
+  const sts=['livre','livre','aduana','contagem','gaiola','finalizado','expedida'];
+  docas=Array.from({length:TOTAL},(_,i)=>{
+    const n=i+1,st=sts[i%sts.length],mon=!['livre','expedida'].includes(st);
+    return{id:n,label:String(n).padStart(2,'0'),status:st,monitor:mon,
+      inicio:mon?Date.now()-Math.floor(Math.random()*38)*60000:null,
+      rota:`SMG15-${String(1000+n).padStart(4,'0')}`,placa:`ABC-${1000+n}`,
+      veiculo:'Truck',transportadora:'Transportes Demo',
+      operation:'ADUANA',mile:'LAST',qty:Math.floor(Math.random()*200+50),
+      stay:Math.floor(Math.random()*45),gateIn:null,gateOut:null,dckIn:null,dckOut:null};
+  });
+  renderFloor();updateSum();
+}
+
+function loadHist(dias,btn){
+  document.querySelectorAll('#tp-hist .btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(typeof google!=='undefined'&&google.script){
+    google.script.run.withSuccessHandler(d=>{histData=d.historicoTurno||[];renderHist();})
+      .withFailureHandler(()=>{}).getDashboardData({date:document.getElementById('cfgDate').value,historico:dias});
+  } else renderHist();
+}
+
+// ── FLOOR ────────────────────────────────────────────────────
+function renderFloor(){
+  const f=document.getElementById('whf');f.innerHTML='';
+  BLOCKS.forEach(b=>{
+    const c=document.createElement('div');c.className='clbl';c.textContent=b.l;f.appendChild(c);
+    const row=document.createElement('div');row.className='drow';
+    for(let n=b.s;n<=b.e;n++)row.appendChild(mkCell(n));
+    f.appendChild(row);
+  });
+  filVis();
+}
+
+function mkCell(n){
+  const d=docas[n-1],el=document.createElement('div');
+  el.className='dc '+dcc(d);el.id='dc-'+n;
+  el.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
+  el.innerHTML=cHTML(d);
+  el.onclick=()=>openMod(d.id);
+  el.onmouseenter=e=>showTT(e,d);el.onmousemove=e=>mvTT(e);el.onmouseleave=hideTT;
+  return el;
+}
+
+function cHTML(d){
+  const sec=el(d),pct=d.monitor?Math.min(100,(sec/TC)*100):0;
+  const ns=csz<50?11:csz<62?13:15;
+  return`<div class="dn" style="font-size:${ns}px">${d.label}</div>
+    ${csz>=48?`<div class="dst">${SL[d.status]||d.status}</div>`:''}
+    ${csz>=54&&d.monitor?`<div class="dtm">${fmt(sec)}</div>`:''}
+    ${d.monitor?`<div class="dpb" style="width:${pct}%"></div>`:''}`;
+}
+
+function dcc(d){
+  if(!d.monitor)return'c-livre';
+  const s=el(d);
+  if(s>=TC)return'c-crit';if(s>=TW)return'c-warn';return'c-ok';
+}
+
+// tick
+setInterval(()=>{
+  docas.forEach(d=>{
+    if(!d.monitor)return;
+    const sec=el(d),cell=document.getElementById('dc-'+d.id);if(!cell)return;
+    cell.className='dc '+dcc(d);cell.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
+    cell.innerHTML=cHTML(d);
+    cell.onclick=()=>openMod(d.id);cell.onmouseenter=e=>showTT(e,d);cell.onmousemove=e=>mvTT(e);cell.onmouseleave=hideTT;
+    if(sec>=TC)pushAl(d,sec);
+  });
+  updateSum();
+},1000);
+
+// auto refresh
+setInterval(()=>loadData(),60000);
+
+// ── SUMMARY ─────────────────────────────────────────────────
+function updateSum(){
+  let lv=0,ok=0,wn=0,cr=0,stayS=0,stayN=0,ot=0;
+  docas.forEach(d=>{
+    if(!d.monitor){lv++;return;}
+    const t=tier(el(d));
+    if(t==='ok')ok++;else if(t==='warn')wn++;else cr++;
+    if(d.stay){stayS+=parseFloat(d.stay);stayN++;if(parseFloat(d.stay)<=30)ot++;}
+  });
+  document.getElementById('sl').textContent=lv;
+  document.getElementById('so').textContent=ok;
+  document.getElementById('sw').textContent=wn;
+  document.getElementById('sc2').textContent=cr;
+  document.getElementById('savg').textContent=stayN>0?Math.round(stayS/stayN)+'min':'—';
+  document.getElementById('spct').textContent=stayN>0?Math.round((ot/stayN)*100)+'%':'—';
+}
+
+// ── FILTER ──────────────────────────────────────────────────
+function setFil(f,btn){
+  cFil=f;document.querySelectorAll('#tp-mapa .btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filVis();
+}
+function filVis(){
+  docas.forEach(d=>{
+    const c=document.getElementById('dc-'+d.id);if(!c)return;
+    let s=true;
+    if(cFil==='livre')s=!d.monitor;
+    if(cFil==='uso')s=d.monitor;
+    if(cFil==='warn')s=d.monitor&&tier(el(d))==='warn';
+    if(cFil==='crit')s=d.monitor&&tier(el(d))==='critical';
+    c.style.opacity=s?'1':'0.1';c.style.pointerEvents=s?'auto':'none';
+  });
+}
+
+function resz(sz){
+  csz=parseInt(sz);
+  document.querySelectorAll('.dc').forEach(cell=>{
+    const id=parseInt(cell.id.split('-')[1]),d=docas[id-1];if(!d)return;
+    cell.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
+    cell.innerHTML=cHTML(d);
+    cell.onclick=()=>openMod(d.id);cell.onmouseenter=e=>showTT(e,d);cell.onmousemove=e=>mvTT(e);cell.onmouseleave=hideTT;
+  });
+}
+
+// ── TOOLTIP ─────────────────────────────────────────────────
+function showTT(e,d){
+  const tt=document.getElementById('tt'),sec=el(d);
+  const col=!d.monitor?'#4cff8a':tier(sec)==='critical'?'#ff4444':tier(sec)==='warn'?'#ffea00':'#00e676';
+  tt.innerHTML=`<div class="tth"><span class="ttid">Doca ${d.label}</span><span class="ttbg" style="background:${col}22;color:${col};border:1px solid ${col}44">${SL[d.status]||d.status}</span></div>
+    <div class="ttr"><span class="ttl">Placa</span><span class="ttv">${d.placa}</span></div>
+    <div class="ttr"><span class="ttl">Transportadora</span><span class="ttv">${d.transportadora}</span></div>
+    <div class="ttr"><span class="ttl">Operação</span><span class="ttv">${d.operation}</span></div>
+    <div class="ttr"><span class="ttl">Mile</span><span class="ttv">${d.mile}</span></div>
+    <div class="ttr"><span class="ttl">Qtd Ship.</span><span class="ttv">${d.qty||'—'}</span></div>
+    ${d.stay?`<div class="ttr"><span class="ttl">Permanência</span><span class="ttv" style="color:${parseFloat(d.stay)>30?'#ff4444':'#00e676'}">${d.stay} min</span></div>`:''}
+    ${d.monitor?`<div class="tttm" style="color:${col}">${fmt(sec)}</div><div style="text-align:center;font-family:var(--fmono);font-size:9px;color:var(--dim);margin-top:2px">/ meta 30:00</div>`
+    :'<div style="text-align:center;margin-top:8px;font-family:var(--fmono);font-size:10px;color:#1a6b3a">— Doca Disponível —</div>'}`;
+  tt.classList.add('show');mvTT(e);
+}
+function mvTT(e){const tt=document.getElementById('tt');let x=e.clientX+14,y=e.clientY-20;if(x+240>window.innerWidth)x=e.clientX-250;if(y+200>window.innerHeight)y=e.clientY-210;tt.style.left=x+'px';tt.style.top=y+'px';}
+function hideTT(){document.getElementById('tt').classList.remove('show');}
+
+// ── MODAL DETALHE ────────────────────────────────────────────
+function openMod(id){
+  const d=docas[id-1],sec=el(d);
+  const col=!d.monitor?'#4cff8a':tier(sec)==='critical'?'#ff4444':tier(sec)==='warn'?'#ffea00':'#00e676';
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(5,8,15,.9);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;animation:fi .2s ease';
+  ov.onclick=e=>{if(e.target===ov)ov.remove();};
+  const fmt2=(dt)=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
+  ov.innerHTML=`<div style="background:#0b1120;border:1px solid #1a2540;border-radius:6px;width:460px;max-width:95vw;overflow:hidden">
+    <div style="padding:14px 20px;border-bottom:1px solid #1a2540;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff">
+        Doca ${d.label} <span style="font-size:11px;color:${col};margin-left:8px">${SL[d.status]||d.status}</span>
+      </div>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:transparent;border:1px solid #1a2540;color:#5a7090;font-size:14px;width:26px;height:26px;cursor:pointer;border-radius:2px">✕</button>
+    </div>
+    <div style="padding:16px 20px">
+      <!-- timer -->
+      <div style="background:rgba(0,0,0,.4);border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#5a7090;margin-bottom:2px">Tempo no Status</div>
+          <div style="font-family:var(--fmono);font-size:36px;font-weight:700;color:${col};letter-spacing:3px">${d.monitor?fmt(sec):'—'}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">Permanência YMS</div>
+          <div style="font-family:var(--fmono);font-size:22px;font-weight:700;color:${d.stay&&parseFloat(d.stay)>30?'#ff4444':'#4cff8a'}">${d.stay?d.stay+' min':'—'}</div>
+        </div>
+      </div>
+      <!-- progress bar -->
+      ${d.monitor?`<div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">
+          <span>0</span><span style="color:#ffea00">20 min ⚠</span><span style="color:#ff4444">30 min 🚨</span></div>
+        <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px">
+          <div style="height:100%;width:${Math.min(100,(sec/TC)*100)}%;background:${col};border-radius:3px;transition:width 1s"></div>
+        </div></div>`:''}
+      <!-- fields grid -->
+      <div class="det-grid">
+        ${[['Placa',d.placa],['Transportadora',d.transportadora],['Operação',d.operation],['Mile',d.mile],
+           ['Qtd Shipments',d.qty||'—'],['Rota',d.rota],
+           ['Gate Checkin',fmt2(d.gateIn)],['Gate Checkout',fmt2(d.gateOut)],
+           ['Doca Checkin',fmt2(d.dckIn)],['Doca Checkout',fmt2(d.dckOut)],
+           ['Veículo',d.veiculo],['Meta OnTime','30:00 min']]
+          .map(([l,v])=>`<div class="det-item"><div class="det-lbl">${l}</div><div class="det-val">${v}</div></div>`).join('')}
+      </div>
+    </div></div>`;
+  document.body.appendChild(ov);
+}
+
+// ── HISTÓRICO ────────────────────────────────────────────────
+function renderHist(){
+  const b=document.getElementById('hbody');
+  if(!histData||!histData.length){b.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--dim);padding:30px">Sem dados históricos disponíveis</td></tr>';return;}
+  const pc={'AM1':'pAM1','PM1':'pPM1','AM2':'pAM2','PM2':'pPM2','MN':'pMN'};
+  b.innerHTML=histData.map(h=>{
+    const c=h.pctOntime>=70?'#00e676':h.pctOntime>=50?'#ffea00':'#ff4444';
+    const tc=h.stayAvg<=30?'#00e676':h.stayAvg<=45?'#ffea00':'#ff4444';
+    return`<tr>
+      <td>${h.date}</td>
+      <td><span class="pill ${pc[h.turno]||'pMN'}">${h.turno}</span></td>
+      <td style="font-family:var(--fmono)">${h.total}</td>
+      <td style="font-family:var(--fmono)">${h.comCheckout}</td>
+      <td style="font-family:var(--fmono);color:${tc}">${h.stayAvg} min</td>
+      <td style="font-family:var(--fmono);color:#00e676">${h.dentro30}</td>
+      <td style="font-family:var(--fmono);color:#ff4444">${h.acima30}</td>
+      <td><div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px">
+          <div style="height:100%;width:${Math.min(100,h.pctOntime)}%;background:${c};border-radius:2px"></div>
+        </div>
+        <span style="font-family:var(--fmono);font-size:10px;color:${c};min-width:34px">${h.pctOntime}%</span>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+// ── DETALHE RAW YMS ──────────────────────────────────────────
+function renderDetalhe(){
+  const body=document.getElementById('dbody');
+  const srch=(document.getElementById('srch').value||'').toLowerCase();
+  const rows=docas.filter(d=>d.monitor||d.gateIn).filter(d=>{
+    if(!srch)return true;
+    return(d.placa+d.rota+d.transportadora+d.operation).toLowerCase().includes(srch);
+  });
+  if(!rows.length){body.innerHTML='<tr><td colspan="12" style="text-align:center;color:var(--dim);padding:20px">Sem registros</td></tr>';return;}
+  const f2=(dt)=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
+  const stay2=(s)=>s?`<span style="color:${parseFloat(s)>30?'#ff4444':'#00e676'}">${s} min</span>`:'—';
+  body.innerHTML=rows.map(d=>`<tr>
+    <td style="font-family:var(--fmono);font-weight:700">${d.label}</td>
+    <td style="font-family:var(--fmono)">${d.placa}</td>
+    <td>${d.transportadora}</td>
+    <td>${d.operation}</td>
+    <td style="font-family:var(--fmono)">${d.mile}</td>
+    <td style="font-family:var(--fmono)">${f2(d.gateIn)}</td>
+    <td style="font-family:var(--fmono)">${f2(d.gateOut)}</td>
+    <td style="font-family:var(--fmono)">${f2(d.dckIn)}</td>
+    <td style="font-family:var(--fmono)">${f2(d.dckOut)}</td>
+    <td>${stay2(d.stay)}</td>
+    <td style="font-family:var(--fmono)">${d.qty||'—'}</td>
+    <td style="font-family:var(--fmono);font-size:9px">${d.rota}</td>
+  </tr>`).join('');
+}
+
+// ── ALERTS ──────────────────────────────────────────────────
+function pushAl(d,sec){
+  const k=`${d.id}_${Math.floor(sec/60)}`;if(aled.has(k))return;aled.add(k);
+  const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  alLog.unshift({t,id:d.id,label:d.label,placa:d.placa,sec});
+  if(alLog.length>60)alLog.pop();renderAl();
+}
+function renderAl(){
+  const l=document.getElementById('apl'),b=document.getElementById('apb');
+  b.textContent=alLog.length;
+  l.innerHTML=alLog.map(a=>`<div class="apr"><span class="aptm">${a.t}</span><span class="apdc">D-${String(a.label).padStart(2,'0')}</span><span class="apmg">Placa: ${a.placa}</span><span class="apel">${fmt(a.sec)}</span></div>`).join('');
+}
+function clrAl(){alLog=[];aled.clear();renderAl();}
+
+// ── EXPORTS ─────────────────────────────────────────────────
+function expCSV(){
+  const h=['Doca','Status','Placa','Transportadora','Operacao','Mile','GateCheckin','GateCheckout','DocaCheckin','DocaCheckout','Permanencia_min','QtdShip','Rota'];
+  const rows=docas.map(d=>[d.label,d.status,d.placa,d.transportadora,d.operation,d.mile,
+    d.gateIn?new Date(d.gateIn).toLocaleTimeString('pt-BR'):'',
+    d.gateOut?new Date(d.gateOut).toLocaleTimeString('pt-BR'):'',
+    d.dckIn?new Date(d.dckIn).toLocaleTimeString('pt-BR'):'',
+    d.dckOut?new Date(d.dckOut).toLocaleTimeString('pt-BR'):'',
+    d.stay||'',d.qty||'',d.rota].join(','));
+  dl([h.join(','),...rows].join('\n'),`SMG15_YMS_${new Date().toISOString().slice(0,10)}.csv`);
+}
+function expHist(){
+  const h=['Data','Turno','Total','ComCheckout','StayAvg_min','Dentro30','Acima30','PctOntime'];
+  const rows=(histData||[]).map(r=>[r.date,r.turno,r.total,r.comCheckout,r.stayAvg,r.dentro30,r.acima30,r.pctOntime].join(','));
+  dl([h.join(','),...rows].join('\n'),`SMG15_historico_${new Date().toISOString().slice(0,10)}.csv`);
+}
+function expRaw(){expCSV();}
+function dl(csv,nm){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=nm;a.click();}
+
+// ── UTILS ────────────────────────────────────────────────────
+function el(d){if(!d.inicio)return 0;return Math.max(0,Math.floor((Date.now()-d.inicio)/1000));}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function tier(s){if(s>=TC)return'critical';if(s>=TW)return'warn';return'ok';}
+function showLov(t){document.getElementById('ltx').textContent=t;document.getElementById('lov').classList.remove('hidden');}
+function hideLov(){document.getElementById('lov').classList.add('hidden');}
+function showErr(m){document.getElementById('emsg').textContent=m;document.getElementById('eb').classList.add('show');}
+function setApi(s,t){const d=document.getElementById('adot'),l=document.getElementById('astat');d.className='adot '+s;l.textContent=t;l.style.color=s==='ok'?'var(--ok)':s==='err'?'var(--alert)':'var(--warn)';}
+
+window.addEventListener('load',()=>{
+  docas=Array.from({length:TOTAL},(_,i)=>({id:i+1,label:String(i+1).padStart(2,'0'),status:'livre',monitor:false,inicio:null,rota:'—',placa:'—',veiculo:'—',transportadora:'—',operation:'—',mile:'—',qty:0,stay:null,gateIn:null,gateOut:null,dckIn:null,dckOut:null}));
+  renderFloor();
+  loadData();
+});
+</script>
+</body>
+</html>
