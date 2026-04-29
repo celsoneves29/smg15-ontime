@@ -10,8 +10,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--fm);min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.012) 2px,rgba(0,212,255,.012) 4px);pointer-events:none;z-index:0}
-
-/* HEADER */
 header{position:sticky;top:0;z-index:100;background:rgba(5,8,15,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between}
 .hl{display:flex;align-items:center;gap:12px}
 .badge{background:var(--accent);color:#000;font-family:var(--fmono);font-weight:700;font-size:11px;padding:3px 10px;border-radius:2px;letter-spacing:2px}
@@ -23,14 +21,9 @@ header{position:sticky;top:0;z-index:100;background:rgba(5,8,15,.96);backdrop-fi
 .adot.load{background:var(--warn);animation:pl .6s ease infinite}
 @keyframes pl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 .clock{font-family:var(--fmono);font-size:18px;font-weight:700;color:var(--accent);letter-spacing:3px}
-
-/* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:1}
 .tab{padding:12px 22px;font-family:var(--fmono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-
-/* SUMMARY BAR */
+.tab:hover{color:var(--text)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .sbar{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1}
 .sc{background:var(--panel);padding:9px 12px;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
@@ -39,29 +32,20 @@ header{position:sticky;top:0;z-index:100;background:rgba(5,8,15,.96);backdrop-fi
 .sval{font-family:var(--fmono);font-size:24px;font-weight:700;line-height:1}
 .s0 .sval{color:var(--accent)}.s1 .sval{color:#4cff8a}.s2 .sval{color:var(--ok)}.s3 .sval{color:var(--warn)}.s4 .sval{color:var(--crit)}.s5 .sval{color:#a78bfa}.s6 .sval{color:#ff6b35}
 .ssub{font-family:var(--fmono);font-size:9px;color:var(--dim)}
-
-/* MAIN */
 .main{padding:14px 20px;position:relative;z-index:1}
 .tp{display:none}.tp.active{display:block}
-
-/* CONTROLS */
 .ctrl{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
 .btn{background:transparent;border:1px solid var(--border);color:var(--dim);font-family:var(--fmono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 11px;cursor:pointer;border-radius:2px;transition:all .15s}
-.btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
-.btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.btn:hover{background:rgba(255,255,255,.06);color:var(--text)}.btn.active{background:var(--accent);border-color:var(--accent);color:#000}
 .btn.prim{border-color:var(--accent);color:var(--accent)}.btn.prim:hover{background:var(--accent);color:#000}
 .spacer{flex:1}
 input[type=date]{background:#05080f;border:1px solid var(--border);color:var(--text);font-family:var(--fmono);font-size:10px;padding:5px 8px;border-radius:3px;outline:none}
 input[type=date]:focus{border-color:var(--accent)}
 .szsld{-webkit-appearance:none;width:70px;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
 .szsld::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
-
-/* LEGEND */
 .leg{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
 .li{display:flex;align-items:center;gap:6px;font-family:var(--fmono);font-size:9px;color:var(--dim)}
 .lb{width:13px;height:13px;border-radius:2px}
-
-/* WAREHOUSE */
 .wh{background:var(--panel);border:1px solid var(--border);border-radius:5px;overflow:hidden}
 .whh{padding:8px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(0,212,255,.03)}
 .wht{font-family:var(--fmono);font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent)}
@@ -69,8 +53,6 @@ input[type=date]:focus{border-color:var(--accent)}
 .whf{padding:14px;overflow-x:auto}
 .clbl{font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);text-align:center;padding:5px;margin:5px 0;border-top:1px dashed rgba(255,255,255,.05);border-bottom:1px dashed rgba(255,255,255,.05);background:rgba(0,212,255,.02)}
 .drow{display:flex;gap:5px;margin-bottom:5px;flex-wrap:nowrap}
-
-/* DOCK CELL */
 .dc{border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid transparent;overflow:hidden;user-select:none;position:relative;transition:transform .12s,box-shadow .12s}
 .dc:hover{transform:scale(1.1);z-index:10;box-shadow:0 4px 20px rgba(0,0,0,.6)}
 .dn{font-family:var(--fmono);font-weight:700;line-height:1;color:rgba(255,255,255,.9)}
@@ -81,13 +63,10 @@ input[type=date]:focus{border-color:var(--accent)}
 .c-ok{background:#0d2520;border-color:rgba(0,230,118,.28)}
 .c-warn{background:#2a2200;border-color:rgba(255,234,0,.4);box-shadow:0 0 8px rgba(255,234,0,.12)}
 .c-crit{background:#1f0000;border-color:rgba(255,0,0,.6);animation:bc .8s ease infinite}
-.c-unk{background:#0d1020;border-color:rgba(255,255,255,.07)}
 @keyframes bc{0%,100%{border-color:rgba(255,0,0,.7);box-shadow:0 0 12px rgba(255,0,0,.35)}50%{border-color:rgba(255,0,0,.15);box-shadow:none}}
 .c-livre .dn{color:rgba(76,255,138,.7)}.c-ok .dn{color:rgba(0,230,118,.9)}.c-warn .dn{color:rgba(255,234,0,.95)}.c-crit .dn{color:#ff3c3c;animation:nf .8s ease infinite}
 @keyframes nf{0%,100%{opacity:1}50%{opacity:.35}}
 .c-warn .dpb{background:var(--warn)}.c-ok .dpb{background:var(--ok)}.c-crit .dpb{background:var(--crit)}
-
-/* TOOLTIP */
 .tt{position:fixed;background:#0e1828;border:1px solid var(--border);border-radius:4px;padding:10px 14px;pointer-events:none;z-index:999;min-width:220px;max-width:300px;box-shadow:0 8px 30px rgba(0,0,0,.8);display:none}
 .tt.show{display:block}
 .tth{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
@@ -96,8 +75,6 @@ input[type=date]:focus{border-color:var(--accent)}
 .ttr{display:flex;justify-content:space-between;gap:8px;margin-bottom:3px}
 .ttl{color:var(--dim);font-family:var(--fmono);font-size:9px}.ttv{color:#e0eeff;font-family:var(--fmono);font-size:10px;text-align:right;flex:1}
 .tttm{text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-family:var(--fmono);font-size:22px;font-weight:700}
-
-/* ALERT LOG */
 .ap{margin-top:14px;background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .aph{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(255,0,0,.04)}
 .apt{font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--alert);display:flex;align-items:center;gap:8px}
@@ -107,8 +84,6 @@ input[type=date]:focus{border-color:var(--accent)}
 .apr{padding:5px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.025);font-family:var(--fmono);font-size:10px;animation:sli .3s ease}
 @keyframes sli{from{transform:translateX(-8px);opacity:0}to{transform:translateX(0);opacity:1}}
 .aptm{color:var(--dim);min-width:38px}.apdc{color:var(--alert);font-weight:700;min-width:55px}.apmg{color:var(--text);flex:1;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.apel{color:var(--crit);font-weight:700}
-
-/* HISTÓRICO TABLE */
 .ht{width:100%;border-collapse:collapse;font-family:var(--fmono);font-size:11px}
 .ht th{padding:8px 12px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);border-bottom:1px solid var(--border)}
 .ht td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text)}
@@ -119,31 +94,24 @@ input[type=date]:focus{border-color:var(--accent)}
 .pAM2{background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
 .pPM2{background:rgba(255,234,0,.15);color:var(--warn);border:1px solid rgba(255,234,0,.3)}
 .pMN{background:rgba(90,112,144,.15);color:var(--dim);border:1px solid rgba(90,112,144,.3)}
-
-/* DETALHE EXTRA */
 .det-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .det-item{background:rgba(0,0,0,.3);border-radius:3px;padding:8px 10px}
 .det-lbl{font-family:var(--fmono);font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:3px}
 .det-val{font-family:var(--fmono);font-size:12px;font-weight:600;color:#e0eeff}
-
-/* loading */
 .lov{position:fixed;inset:0;background:rgba(5,8,15,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
 .lov.hidden{display:none}
 .lsp{width:40px;height:40px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .ltx{font-family:var(--fmono);font-size:12px;color:var(--dim);letter-spacing:2px;text-transform:uppercase}
-
-/* error */
 .eb{background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);border-radius:4px;padding:10px 16px;margin-bottom:12px;font-family:var(--fmono);font-size:11px;color:var(--alert);display:none;align-items:center;gap:10px}
 .eb.show{display:flex}
-
 .lu{font-family:var(--fmono);font-size:9px;color:var(--dim);text-align:right;margin-top:6px}
 footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:var(--fmono);font-size:9px;color:var(--dim);position:relative;z-index:1}
 </style>
 </head>
 <body>
 
-<div class="lov" id="lov"><div class="lsp"></div><div class="ltx" id="ltx">Carregando BigQuery...</div></div>
+<div class="lov" id="lov"><div class="lsp"></div><div class="ltx" id="ltx">Carregando dados do Sheets...</div></div>
 
 <header>
   <div class="hl">
@@ -158,17 +126,6 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
     <div class="clock" id="clock">--:--:--</div>
   </div>
 </header>
-
-<!-- PAINEL CONFIG SHEET ID -->
-<div id="cfg-panel" style="background:rgba(0,212,255,0.06);border-bottom:1px solid #1a2540;padding:10px 20px;display:flex;align-items:center;gap:10px;position:relative;z-index:1;flex-wrap:wrap">
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#5a7090">Google Sheet ID:</span>
-  <input id="sheetId" type="text"
-    placeholder="Cole aqui o ID da planilha (ex: 1BxiM...)"
-    style="flex:1;min-width:280px;background:#05080f;border:1px solid #1a2540;color:#c8d8f0;font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;border-radius:3px;outline:none"
-    oninput="localStorage.setItem('smg15_sheet_id',this.value)">
-  <button onclick="loadData()" style="background:#00d4ff;border:none;color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 16px;border-radius:3px;cursor:pointer">▶ Carregar</button>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5a7090">Planilha > Arquivo > Compartilhar > Publicar na web → copie o ID da URL</span>
-</div>
 
 <div class="tabs">
   <div class="tab active" onclick="swTab('mapa',this)">🗺 Mapa de Vagas</div>
@@ -188,7 +145,6 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
 
 <div class="main">
 
-<!-- TAB MAPA -->
 <div class="tp active" id="tp-mapa">
   <div class="eb" id="eb"><span>⚠</span><span id="emsg">Erro.</span><span style="margin-left:auto;cursor:pointer" onclick="this.closest('.eb').classList.remove('show')">✕</span></div>
   <div class="ctrl">
@@ -213,11 +169,11 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
   <div class="wh">
     <div class="whh">
       <span class="wht">🏭 Mapa de Vagas — SMG15 | Docas 01–75</span>
-      <span class="whs" id="whs">Fonte: BigQuery YMS Gate · Hover = detalhes · Clique = modal</span>
+      <span class="whs" id="whs">Fonte: Google Sheets YMS Online · Hover = detalhes · Clique = modal</span>
     </div>
     <div class="whf" id="whf"></div>
   </div>
-  <div class="lu">Atualização: <span id="lut">—</span> &nbsp;|&nbsp; Próximo refresh: <span id="lun">60s</span></div>
+  <div class="lu">Última atualização: <span id="lut">—</span> &nbsp;|&nbsp; Próximo refresh: <span id="lun">60s</span></div>
   <div class="ap">
     <div class="aph">
       <div class="apt">⚠ Alertas OnTime &gt;30 min <span class="apb" id="apb">0</span></div>
@@ -227,25 +183,24 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
   </div>
 </div>
 
-<!-- TAB HISTÓRICO -->
 <div class="tp" id="tp-hist">
   <div class="ctrl">
-    <button class="btn active" onclick="loadHist(7,this)">7 dias</button>
-    <button class="btn" onclick="loadHist(14,this)">14 dias</button>
-    <button class="btn" onclick="loadHist(30,this)">30 dias</button>
+    <button class="btn active" onclick="setDias(7,this)">7 dias</button>
+    <button class="btn" onclick="setDias(14,this)">14 dias</button>
+    <button class="btn" onclick="setDias(30,this)">30 dias</button>
     <div class="spacer"></div>
-    <button class="btn" onclick="expHist()">⬇ CSV Histórico</button>
+    <button class="btn" onclick="expHist()">⬇ CSV</button>
   </div>
   <div class="wh">
     <div class="whh">
       <span class="wht">📊 Histórico por Turno — SMG15</span>
-      <span class="whs">Fonte: BigQuery · Gate_Facility_StayTimeMinutes</span>
+      <span class="whs">Calculado a partir de Gate_Facility_StayTimeMinutes (YMS)</span>
     </div>
     <div style="padding:14px;overflow-x:auto">
       <table class="ht">
         <thead><tr>
-          <th>Data</th><th>Turno</th><th>Entradas YMS</th><th>Com Saída</th>
-          <th>Tempo Médio Doca</th><th>Dentro 30 min</th><th>Acima 30 min</th><th>% Ontime</th>
+          <th>Data</th><th>Turno</th><th>Entradas</th><th>Com Saída</th>
+          <th>Tempo Médio</th><th>≤ 30 min</th><th>&gt; 30 min</th><th>% Ontime</th>
         </tr></thead>
         <tbody id="hbody"><tr><td colspan="8" style="text-align:center;color:var(--dim);padding:30px">Carregando...</td></tr></tbody>
       </table>
@@ -253,43 +208,49 @@ footer{margin-top:14px;padding:10px 20px;border-top:1px solid var(--border);disp
   </div>
 </div>
 
-<!-- TAB DETALHE YMS -->
 <div class="tp" id="tp-detalhe">
   <div class="ctrl">
-    <span style="font-family:var(--fmono);font-size:9px;color:var(--dim)">Buscar placa ou rota:</span>
-    <input id="srch" type="text" placeholder="ex: ABC-1234" style="background:#05080f;border:1px solid var(--border);color:var(--text);font-family:var(--fmono);font-size:11px;padding:5px 10px;border-radius:3px;outline:none;width:180px" oninput="renderDetalhe()">
+    <input id="srch" type="text" placeholder="Buscar placa, transportadora, rota..."
+      style="background:#05080f;border:1px solid var(--border);color:var(--text);font-family:var(--fmono);font-size:11px;padding:5px 10px;border-radius:3px;outline:none;width:260px"
+      oninput="renderDet()">
     <div class="spacer"></div>
-    <button class="btn" onclick="expRaw()">⬇ CSV Raw YMS</button>
+    <button class="btn" onclick="expCSV()">⬇ CSV</button>
   </div>
   <div class="wh">
     <div class="whh">
-      <span class="wht">🔍 Detalhe Completo YMS — SMG15</span>
-      <span class="whs">Todos os campos retornados pelo BigQuery</span>
+      <span class="wht">🔍 Detalhe Completo YMS</span>
+      <span class="whs">Dados brutos da planilha YMS ONLINE</span>
     </div>
-    <div style="padding:14px;overflow-x:auto;max-height:500px;overflow-y:auto">
-      <table class="ht" id="dtbl">
+    <div style="padding:14px;overflow-x:auto;max-height:480px;overflow-y:auto">
+      <table class="ht">
         <thead><tr>
           <th>Doca</th><th>Placa</th><th>Transportadora</th><th>Operação</th><th>Mile</th>
-          <th>Checkin Gate</th><th>Checkout Gate</th><th>Checkin Doca</th><th>Checkout Doca</th>
-          <th>Permanência</th><th>Qtd Ship</th><th>Rota</th>
+          <th>Gate Checkin</th><th>Gate Checkout</th><th>Doca Checkin</th><th>Doca Checkout</th>
+          <th>Permanência</th><th>Qtd Ship</th><th>Tipo Veículo</th>
         </tr></thead>
-        <tbody id="dbody"><tr><td colspan="12" style="text-align:center;color:var(--dim);padding:30px">Carregue os dados primeiro</td></tr></tbody>
+        <tbody id="dbody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-</div><!-- /main -->
+</div>
 
 <footer>
-  <span>SMG15 — Last Mile OnTime Monitor | BigQuery: meli-bi-data.WHOWNER.BT_SHP_MT_YMS_GATE</span>
+  <span>SMG15 — OnTime Monitor | Fonte: YMS ONLINE Google Sheets | BigQuery meli-bi-data</span>
   <span id="fdt"></span>
 </footer>
 
 <div class="tt" id="tt"></div>
 
 <script>
-const TW=20*60,TC=30*60,TOTAL=75;
+// ── CONFIG ───────────────────────────────────────────────────
+// ID da planilha YMS ONLINE fornecida
+const SHEET_ID = '1hLwB3cPT8nBVsbo9JCSGmnpQ1j5EUzOyM_2C9TWnuVc';
+// GID da aba "Página conectada 1" (dados ao vivo do BigQuery)
+const GID_LIVE = '1935762865';
+
+const TW=20*60, TC=30*60, TOTAL=75;
 const SL={livre:'Livre',aduana:'Aduana',contagem:'Contagem',gaiola:'Ag.Gaiola',finalizado:'Finalizado',expedida:'Expedida'};
 const BLOCKS=[
   {l:'▶ Corredor A — Docas 01–15',s:1,e:15},
@@ -299,10 +260,8 @@ const BLOCKS=[
   {l:'▶ Corredor E — Docas 61–75',s:61,e:75},
 ];
 
-let docas=[],rawData=null,histData=[],alLog=[],aled=new Set(),csz=58,cFil='all',nxt=60;
-
-// init
-document.getElementById('cfgDate').value=new Date().toISOString().slice(0,10);
+let docas=[], rawRows=[], histData=[], alLog=[], aled=new Set();
+let csz=58, cFil='all', nxt=60, diasHist=7;
 
 // clock
 setInterval(()=>{
@@ -313,6 +272,8 @@ setInterval(()=>{
   document.getElementById('lun').textContent=nxt+'s';
 },1000);
 
+document.getElementById('cfgDate').value=new Date().toISOString().slice(0,10);
+
 function swTab(id,btn){
   document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -320,251 +281,253 @@ function swTab(id,btn){
   btn.classList.add('active');
 }
 
-// ── CONFIGURAÇÃO DA PLANILHA ────────────────────────────────
-// Cole aqui a URL de publicação da sua planilha Google Sheets
-// Planilha > Arquivo > Compartilhar > Publicar na Web > CSV
-let SHEET_ID = localStorage.getItem('smg15_sheet_id') || '';
-
-// ── LOAD ────────────────────────────────────────────────────
+// ── LOAD DATA FROM SHEETS ────────────────────────────────────
 function loadData(){
-  const sid = document.getElementById('sheetId')?.value?.trim() || SHEET_ID;
-  if(!sid){
-    showCfgPanel();
-    hideLov();
-    return;
-  }
-  SHEET_ID = sid;
-  localStorage.setItem('smg15_sheet_id',sid);
-
-  showLov('Lendo dados da planilha BigQuery...');
+  showLov('Lendo dados do Sheets YMS...');
   setApi('load','Carregando...');
 
-  // Lê aba DOCAS_LIVE
-  const urlDocas = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=DOCAS_LIVE`;
-  const urlHist  = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=HISTORICO`;
-  const urlMeta  = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:csv&sheet=META`;
+  const today = document.getElementById('cfgDate').value || new Date().toISOString().slice(0,10);
 
-  Promise.all([
-    fetch(urlDocas).then(r=>r.text()),
-    fetch(urlHist).then(r=>r.text()),
-    fetch(urlMeta).then(r=>r.text()).catch(()=>''),
-  ])
-  .then(([csvDocas, csvHist, csvMeta]) => {
-    const docasRows  = parseCSV(csvDocas);
-    const histRows   = parseCSV(csvHist);
-    const metaRows   = parseCSV(csvMeta);
-    const updatedAt  = metaRows.find(r=>r.UPDATED_AT==='UPDATED_AT' || r[0]==='UPDATED_AT')?.[1]
-                    || metaRows[0]?.B || new Date().toISOString();
-    onLoadedSheets(docasRows, histRows, updatedAt);
-  })
-  .catch(e => {
-    hideLov();
-    setApi('err','Erro Sheets');
-    showErr('Erro ao ler planilha: '+e.message+'. Verifique se o Sheet ID está correto e a planilha está publicada na web.');
-  });
+  // Usa gviz/tq para ler a aba como JSON (não precisa publicar)
+  // Adiciona header para autenticação via cookies da sessão Google
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID_LIVE}`;
+
+  fetch(url, {credentials:'include'})
+    .then(r => {
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.text();
+    })
+    .then(text => {
+      // Remove wrapper google.visualization.Query.setResponse(...)
+      const clean = text.replace(/^[^\(]+\(/, '').replace(/\);\s*$/, '');
+      const json = JSON.parse(clean);
+      processGviz(json, today);
+    })
+    .catch(e => {
+      hideLov();
+      setApi('err','Erro Sheets');
+      showErr('Não foi possível acessar a planilha: '+e.message+'. A planilha precisa estar compartilhada com "Qualquer pessoa com o link".');
+      loadDemo();
+    });
 }
 
-// ── PARSE CSV ────────────────────────────────────────────────
-function parseCSV(csv){
-  if(!csv||!csv.trim())return[];
-  const lines=csv.trim().split('\n');
-  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
-  return lines.slice(1).map(line=>{
-    const vals=line.match(/(".*?"|[^,]+|(?<=,)(?=,)|^(?=,)|(?<=,)$)/g)||[];
-    const obj={};
-    headers.forEach((h,i)=>{ obj[h]=(vals[i]||'').replace(/"/g,'').trim(); });
+// ── PROCESSA RESPOSTA GVIZ ───────────────────────────────────
+function processGviz(json, today){
+  const cols = json.table.cols.map(c => c.label || c.id);
+  const rows = (json.table.rows || []).map(r => {
+    const obj = {};
+    (r.c || []).forEach((cell, i) => {
+      obj[cols[i]] = cell ? (cell.f || cell.v || '') : '';
+    });
     return obj;
   });
-}
 
-// ── PROCESSA DADOS DO SHEETS ─────────────────────────────────
-function onLoadedSheets(docasRows, histRows, updatedAt){
-  hideLov();
-  setApi('ok','BigQuery via Sheets ✓');
+  // Mapeamento das colunas reais da planilha YMS ONLINE
+  // Baseado na query fornecida: ID, Gate_Checkin_Date, Gate_Checkout_Date, GATE_Ref,
+  // Gate_Checkin_UserId, PURPOSE_MILE, Gate_Checkin_DeviceType, GATE_CHECKIN_OPERATION,
+  // GATE_CHECKIN_OPERATION_AUTHORIZATIONS, GATE_CHECKIN_ESTIMATED_TIME,
+  // Gate_Checkout_UserId, Gate_Checkout_DeviceType, GATE_CHECKOUT_ESTIMATED_TIME,
+  // Gate_Facility_StayTimeMinutes, Request_Carrier_DisplayName, Request_Carrier_Id,
+  // Request_Driver_DriverId, Request_Facility_Id, Request_Facility_SiteId,
+  // Request_Vehicle_LicensePlate, Request_Vehicle_Type_Description, Request_Vehicle_Id
 
-  // Monta array de 75 docas a partir da planilha
-  docas=Array.from({length:TOTAL},(_,i)=>{
-    const n=i+1;
-    const r=docasRows.find(row=>parseInt(row.DOCA_NUM||row['DOCA_NUM']||0)===n);
-    if(!r||!r.STATUS||r.STATUS==='livre'&&!r.PLACA)
-      return{id:n,label:String(n).padStart(2,'0'),status:'livre',monitor:false,
-        inicio:null,rota:'—',placa:'—',veiculo:'—',transportadora:'—',
-        operation:'—',mile:'—',qty:0,stay:null,gateIn:null,gateOut:null,dckIn:null,dckOut:null};
+  const hoje = today;
+  rawRows = rows;
 
-    const mon=!['livre','expedida'].includes(r.STATUS||'livre');
-    const inicioStr=r.INICIO_STATUS||r.DOCA_CHECKIN||'';
-    const inicio=inicioStr&&inicioStr!==''?new Date(inicioStr).getTime():null;
-    return{
-      id:n, label:String(n).padStart(2,'0'),
-      status:r.STATUS||'livre', monitor:mon, inicio,
-      rota:r.ROTA||'—', placa:r.PLACA||'—',
-      veiculo:r.TIPO_VEICULO||'—', transportadora:r.TRANSPORTADORA||'—',
-      operation:r.OPERACAO||'—', mile:r.MILE||'—',
-      qty:parseInt(r.QTD_SHIPMENTS||0),
-      stay:r.PERMANENCIA_MIN||null,
-      gateIn:r.GATE_CHECKIN||null, gateOut:r.GATE_CHECKOUT||null,
-      dckIn:r.DOCA_CHECKIN||null, dckOut:r.DOCA_CHECKOUT||null,
+  // Filtra linhas de hoje
+  const todayRows = rows.filter(r => {
+    const ref = r['GATE_Ref'] || r['Gate_Ref'] || r['GATE_Reference_Date'] || '';
+    const refStr = typeof ref === 'string' ? ref : String(ref);
+    return refStr.slice(0,10) === hoje || refStr === '' || rows.length < 200;
+  });
+
+  // Agrupa por doca: usa Request_Vehicle_LicensePlate + Gate_Checkin como chave
+  // Como a planilha não tem número de doca explícito, criamos um mapeamento
+  // por placa → doca (atribuição sequencial pelas entradas de hoje)
+  const placaDocaMap = {};
+  let docaCounter = 1;
+
+  todayRows.forEach(r => {
+    const placa = r['Request_Vehicle_LicensePlate'] || r['Request_Vehicle_LicensePlate'] || '';
+    if (!placa || placa === '') return;
+    if (!placaDocaMap[placa] && docaCounter <= 75) {
+      placaDocaMap[placa] = docaCounter++;
+    }
+  });
+
+  // Monta as 75 docas
+  docas = Array.from({length:TOTAL}, (_, i) => {
+    const n = i+1;
+    // Encontra a linha mais recente para este slot de doca
+    const row = todayRows.find(r => {
+      const placa = r['Request_Vehicle_LicensePlate'] || '';
+      return placaDocaMap[placa] === n;
+    });
+
+    if (!row) return {
+      id:n, label:String(n).padStart(2,'0'), status:'livre', monitor:false,
+      inicio:null, rota:'—', placa:'—', veiculo:'—', transportadora:'—',
+      operation:'—', mile:'—', qty:0, stay:null,
+      gateIn:null, gateOut:null, dckIn:null, dckOut:null
+    };
+
+    const gateIn   = parseDate(row['Gate_Checkin_Date']  || row['Gate_Checkin_Date']);
+    const gateOut  = parseDate(row['Gate_Checkout_Date'] || row['Gate_Checkout_Date']);
+    const stay     = parseFloat(row['Gate_Facility_StayTimeMinutes'] || 0) || null;
+    const op       = (row['GATE_CHECKIN_OPERATION'] || '').toUpperCase();
+    const mile     = (row['PURPOSE_MILE'] || '').toLowerCase();
+
+    // Determina status
+    let status = 'livre';
+    let inicioMs = null;
+
+    if (gateIn && !gateOut) {
+      inicioMs = gateIn;
+      if (op.includes('ADUANA') || op.includes('CUSTOM'))         status = 'aduana';
+      else if (op.includes('CONTAGEM') || op.includes('COUNT'))    status = 'contagem';
+      else if (op.includes('GAIOLA') || op.includes('CAGE'))       status = 'gaiola';
+      else if (op.includes('FINAL'))                                status = 'finalizado';
+      else if (mile === 'last_mile' || mile === 'last')             status = 'aduana';
+      else                                                          status = 'aduana';
+    } else if (gateOut) {
+      status = 'expedida';
+    }
+
+    const mon = !['livre','expedida'].includes(status);
+
+    return {
+      id: n, label: String(n).padStart(2,'0'),
+      status, monitor: mon, inicio: inicioMs,
+      placa:  row['Request_Vehicle_LicensePlate'] || '—',
+      veiculo: row['Request_Vehicle_Type_Description'] || '—',
+      transportadora: row['Request_Carrier_DisplayName'] || '—',
+      operation: row['GATE_CHECKIN_OPERATION'] || '—',
+      mile: row['PURPOSE_MILE'] || '—',
+      qty: 0, stay,
+      gateIn: row['Gate_Checkin_Date'] || null,
+      gateOut: row['Gate_Checkout_Date'] || null,
+      dckIn: null, dckOut: null,
+      rota: '—',
     };
   });
 
-  // Processa histórico
-  histData=histRows.map(r=>({
-    date:r.DATA||r.DATA_REF||'',
-    turno:r.TURNO||'',
-    total:parseInt(r.TOTAL||0),
-    comCheckout:parseInt(r.COM_CHECKOUT||0),
-    stayAvg:parseInt(r.STAY_AVG_MIN||0),
-    dentro30:parseInt(r.DENTRO_30||0),
-    acima30:parseInt(r.ACIMA_30||0),
-    pctOntime:parseInt(r.PCT_ONTIME||0),
-  }));
+  // Histórico
+  histData = buildHist(rows);
 
-  document.getElementById('st').textContent=docasRows.filter(r=>r.PLACA&&r.PLACA!=='').length;
-  document.getElementById('lut').textContent=new Date(updatedAt).toLocaleTimeString('pt-BR');
-  renderFloor();updateSum();renderHist();renderDetalhe();
-  nxt=60;
-}
+  const total = Object.keys(placaDocaMap).length;
+  document.getElementById('st').textContent = total;
+  document.getElementById('lut').textContent = new Date().toLocaleTimeString('pt-BR');
+  document.getElementById('whs').textContent = `Fonte: YMS ONLINE (${rows.length} registros) · Atualizado ${new Date().toLocaleTimeString('pt-BR')}`;
 
-function mapMeliApi(j,date){
-  const dm={};
-  const routes=j.waves?j.waves.flatMap(w=>w.routes||[]):(j.routes||[]);
-  routes.forEach(r=>{
-    const n=parseInt(r.dockId||r.dock||0);
-    if(!n||n>75)return;
-    const sm={CUSTOMS_IN_PROGRESS:'aduana',DRIVER_COUNTING:'contagem',WAITING_CAGE:'gaiola',
-      PROCESS_FINISHED:'finalizado',DISPATCHED:'expedida',CONCLUDED:'expedida'};
-    const st=sm[(r.status||'').toUpperCase()]||'aduana';
-    dm[n]={dockNum:n,dockName:'Doca '+n,routeId:r.routeId||'—',placa:r.vehicle?.plate||'—',
-      veiculo:'—',transportadora:r.carrier||'—',operation:r.status||'—',
-      mile:r.mile||'LAST',qtyShipment:r.packages||0,status:st,
-      inicioMs:r.statusStartTime?new Date(r.statusStartTime).getTime():null,
-      stayMinutes:null,gateCheckin:r.statusStartTime,gateCheckout:null,dckCheckin:r.statusStartTime,dckCheckout:null};
-  });
-  return{date,docas:dm,totalRoutes:routes.length,updatedAt:new Date().toISOString(),historicoTurno:[]};
-}
-
-function onLoaded(data){
-  rawData=data;
   hideLov();
-  setApi('ok','BigQuery ✓ YMS');
+  setApi('ok','Sheets YMS ✓');
+  renderFloor(); updateSum(); renderHist(); renderDet();
+  nxt = 60;
+}
 
-  docas=Array.from({length:TOTAL},(_,i)=>{
-    const n=i+1,d=data.docas?data.docas[n]:null;
-    if(!d)return{id:n,label:String(n).padStart(2,'0'),status:'livre',monitor:false,inicio:null,
-      rota:'—',placa:'—',veiculo:'—',transportadora:'—',operation:'—',mile:'—',qty:0,stay:null,
-      gateIn:null,gateOut:null,dckIn:null,dckOut:null};
-    const mon=!['livre','expedida'].includes(d.status);
-    const inicio=d.inicioMs||(d.dckCheckin?new Date(d.dckCheckin).getTime():null);
-    return{id:n,label:String(n).padStart(2,'0'),status:d.status,monitor:mon,inicio,
-      rota:d.routeId||'—',placa:d.placa||'—',veiculo:d.veiculo||'—',
-      transportadora:d.transportadora||'—',operation:d.operation||'—',
-      mile:d.mile||'—',qty:d.qtyShipment||0,stay:d.stayMinutes,
-      gateIn:d.gateCheckin,gateOut:d.gateCheckout,dckIn:d.dckCheckin,dckOut:d.dckCheckout};
+// ── HISTÓRICO ────────────────────────────────────────────────
+function buildHist(rows){
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - diasHist);
+  const turnos = {};
+
+  rows.forEach(r => {
+    const refStr = r['GATE_Ref'] || r['GATE_Reference_Date'] || r['Gate_Ref'] || '';
+    const ref = refStr.slice(0,10);
+    if (!ref || new Date(ref) < cutoff) return;
+
+    const checkinStr = r['Gate_Checkin_Date'] || '';
+    const h = checkinStr ? new Date(checkinStr).getHours() : 0;
+    const turno = h<6?'MN':h<12?'AM1':h<18?'PM1':'PM2';
+    const key = `${ref}_${turno}`;
+
+    if(!turnos[key]) turnos[key]={date:ref,turno,total:0,comSaida:0,staySum:0,stayN:0,dentro30:0,acima30:0};
+    const t=turnos[key];
+    t.total++;
+    if(r['Gate_Checkout_Date']) t.comSaida++;
+    const stay=parseFloat(r['Gate_Facility_StayTimeMinutes']||0);
+    if(stay>0){t.staySum+=stay;t.stayN++;if(stay<=30)t.dentro30++;else t.acima30++;}
   });
 
-  histData=data.historicoTurno||[];
-  document.getElementById('st').textContent=data.totalRoutes||0;
-  document.getElementById('lut').textContent=new Date().toLocaleTimeString('pt-BR');
-
-  renderFloor();updateSum();renderHist();renderDetalhe();
-  nxt=60;
+  return Object.values(turnos)
+    .map(t=>({...t,
+      stayAvg: t.stayN>0?Math.round(t.staySum/t.stayN):0,
+      pctOntime: t.stayN>0?Math.round((t.dentro30/t.stayN)*100):0}))
+    .sort((a,b)=>b.date.localeCompare(a.date)||a.turno.localeCompare(b.turno));
 }
 
-function onErr(e){
-  hideLov();
-  // CORS esperado quando acessado fora do portal Meli — carrega demo silenciosamente
-  setApi('ok','Modo Demo');
-  loadDemo();
-}
-
-function loadDemoWithNote(){ setApi('ok','Demo'); 
-  // Dados demo — para dados reais abra no mesmo browser logado no portal Meli
-  setApi('ok','Demo — Abra no portal Meli para dados reais');
-  loadDemo();
-}
-
-function loadDemo(){
-  const sts=['livre','livre','aduana','contagem','gaiola','finalizado','expedida'];
-  docas=Array.from({length:TOTAL},(_,i)=>{
-    const n=i+1,st=sts[i%sts.length],mon=!['livre','expedida'].includes(st);
-    return{id:n,label:String(n).padStart(2,'0'),status:st,monitor:mon,
-      inicio:mon?Date.now()-Math.floor(Math.random()*38)*60000:null,
-      rota:`SMG15-${String(1000+n).padStart(4,'0')}`,placa:`ABC-${1000+n}`,
-      veiculo:'Truck',transportadora:'Transportes Demo',
-      operation:'ADUANA',mile:'LAST',qty:Math.floor(Math.random()*200+50),
-      stay:Math.floor(Math.random()*45),gateIn:null,gateOut:null,dckIn:null,dckOut:null};
-  });
-  renderFloor();updateSum();
-}
-
-function loadHist(dias,btn){
+function setDias(d,btn){
+  diasHist=d;
   document.querySelectorAll('#tp-hist .btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  if(typeof google!=='undefined'&&google.script){
-    google.script.run.withSuccessHandler(d=>{histData=d.historicoTurno||[];renderHist();})
-      .withFailureHandler(()=>{}).getDashboardData({date:document.getElementById('cfgDate').value,historico:dias});
-  } else renderHist();
+  histData=buildHist(rawRows);
+  renderHist();
 }
 
 // ── FLOOR ────────────────────────────────────────────────────
 function renderFloor(){
-  const f=document.getElementById('whf');f.innerHTML='';
+  const f=document.getElementById('whf'); f.innerHTML='';
   BLOCKS.forEach(b=>{
-    const c=document.createElement('div');c.className='clbl';c.textContent=b.l;f.appendChild(c);
-    const row=document.createElement('div');row.className='drow';
-    for(let n=b.s;n<=b.e;n++)row.appendChild(mkCell(n));
+    const c=document.createElement('div'); c.className='clbl'; c.textContent=b.l; f.appendChild(c);
+    const row=document.createElement('div'); row.className='drow';
+    for(let n=b.s;n<=b.e;n++) row.appendChild(mkCell(n));
     f.appendChild(row);
   });
   filVis();
 }
 
 function mkCell(n){
-  const d=docas[n-1],el=document.createElement('div');
-  el.className='dc '+dcc(d);el.id='dc-'+n;
+  const d=docas[n-1], el=document.createElement('div');
+  el.className='dc '+dcc(d); el.id='dc-'+n;
   el.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
   el.innerHTML=cHTML(d);
   el.onclick=()=>openMod(d.id);
-  el.onmouseenter=e=>showTT(e,d);el.onmousemove=e=>mvTT(e);el.onmouseleave=hideTT;
+  el.onmouseenter=e=>showTT(e,d); el.onmousemove=e=>mvTT(e); el.onmouseleave=hideTT;
   return el;
 }
 
 function cHTML(d){
-  const sec=el(d),pct=d.monitor?Math.min(100,(sec/TC)*100):0;
+  const sec=elapsed(d), pct=d.monitor?Math.min(100,(sec/TC)*100):0;
   const ns=csz<50?11:csz<62?13:15;
-  return`<div class="dn" style="font-size:${ns}px">${d.label}</div>
+  return `<div class="dn" style="font-size:${ns}px">${d.label}</div>
     ${csz>=48?`<div class="dst">${SL[d.status]||d.status}</div>`:''}
     ${csz>=54&&d.monitor?`<div class="dtm">${fmt(sec)}</div>`:''}
     ${d.monitor?`<div class="dpb" style="width:${pct}%"></div>`:''}`;
 }
 
 function dcc(d){
-  if(!d.monitor)return'c-livre';
-  const s=el(d);
-  if(s>=TC)return'c-crit';if(s>=TW)return'c-warn';return'c-ok';
+  if(!d.monitor) return 'c-livre';
+  const s=elapsed(d);
+  if(s>=TC) return 'c-crit';
+  if(s>=TW) return 'c-warn';
+  return 'c-ok';
 }
 
-// tick
+// tick ao vivo
 setInterval(()=>{
   docas.forEach(d=>{
-    if(!d.monitor)return;
-    const sec=el(d),cell=document.getElementById('dc-'+d.id);if(!cell)return;
-    cell.className='dc '+dcc(d);cell.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
+    if(!d.monitor) return;
+    const sec=elapsed(d), cell=document.getElementById('dc-'+d.id);
+    if(!cell) return;
+    cell.className='dc '+dcc(d);
+    cell.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
     cell.innerHTML=cHTML(d);
-    cell.onclick=()=>openMod(d.id);cell.onmouseenter=e=>showTT(e,d);cell.onmousemove=e=>mvTT(e);cell.onmouseleave=hideTT;
-    if(sec>=TC)pushAl(d,sec);
+    cell.onclick=()=>openMod(d.id);
+    cell.onmouseenter=e=>showTT(e,d); cell.onmousemove=e=>mvTT(e); cell.onmouseleave=hideTT;
+    if(sec>=TC) pushAl(d,sec);
   });
   updateSum();
-},1000);
+}, 1000);
 
-// auto refresh
-setInterval(()=>loadData(),60000);
+// auto-refresh
+setInterval(()=>loadData(), 60000);
 
 // ── SUMMARY ─────────────────────────────────────────────────
 function updateSum(){
   let lv=0,ok=0,wn=0,cr=0,stayS=0,stayN=0,ot=0;
   docas.forEach(d=>{
     if(!d.monitor){lv++;return;}
-    const t=tier(el(d));
+    const t=tier(elapsed(d));
     if(t==='ok')ok++;else if(t==='warn')wn++;else cr++;
     if(d.stay){stayS+=parseFloat(d.stay);stayN++;if(parseFloat(d.stay)<=30)ot++;}
   });
@@ -578,132 +541,154 @@ function updateSum(){
 
 // ── FILTER ──────────────────────────────────────────────────
 function setFil(f,btn){
-  cFil=f;document.querySelectorAll('#tp-mapa .btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filVis();
+  cFil=f;
+  document.querySelectorAll('#tp-mapa .btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); filVis();
 }
 function filVis(){
   docas.forEach(d=>{
-    const c=document.getElementById('dc-'+d.id);if(!c)return;
+    const c=document.getElementById('dc-'+d.id); if(!c) return;
     let s=true;
-    if(cFil==='livre')s=!d.monitor;
-    if(cFil==='uso')s=d.monitor;
-    if(cFil==='warn')s=d.monitor&&tier(el(d))==='warn';
-    if(cFil==='crit')s=d.monitor&&tier(el(d))==='critical';
-    c.style.opacity=s?'1':'0.1';c.style.pointerEvents=s?'auto':'none';
+    if(cFil==='livre') s=!d.monitor;
+    if(cFil==='uso')   s=d.monitor;
+    if(cFil==='warn')  s=d.monitor&&tier(elapsed(d))==='warn';
+    if(cFil==='crit')  s=d.monitor&&tier(elapsed(d))==='critical';
+    c.style.opacity=s?'1':'0.1';
+    c.style.pointerEvents=s?'auto':'none';
   });
 }
-
 function resz(sz){
   csz=parseInt(sz);
   document.querySelectorAll('.dc').forEach(cell=>{
-    const id=parseInt(cell.id.split('-')[1]),d=docas[id-1];if(!d)return;
+    const id=parseInt(cell.id.split('-')[1]), d=docas[id-1]; if(!d) return;
     cell.style.cssText=`width:${csz}px;height:${csz}px;min-width:${csz}px`;
     cell.innerHTML=cHTML(d);
-    cell.onclick=()=>openMod(d.id);cell.onmouseenter=e=>showTT(e,d);cell.onmousemove=e=>mvTT(e);cell.onmouseleave=hideTT;
+    cell.onclick=()=>openMod(d.id);
+    cell.onmouseenter=e=>showTT(e,d); cell.onmousemove=e=>mvTT(e); cell.onmouseleave=hideTT;
   });
 }
 
 // ── TOOLTIP ─────────────────────────────────────────────────
 function showTT(e,d){
-  const tt=document.getElementById('tt'),sec=el(d);
+  const tt=document.getElementById('tt'), sec=elapsed(d);
   const col=!d.monitor?'#4cff8a':tier(sec)==='critical'?'#ff4444':tier(sec)==='warn'?'#ffea00':'#00e676';
-  tt.innerHTML=`<div class="tth"><span class="ttid">Doca ${d.label}</span><span class="ttbg" style="background:${col}22;color:${col};border:1px solid ${col}44">${SL[d.status]||d.status}</span></div>
+  tt.innerHTML=`
+    <div class="tth">
+      <span class="ttid">Doca ${d.label}</span>
+      <span class="ttbg" style="background:${col}22;color:${col};border:1px solid ${col}44">${SL[d.status]||d.status}</span>
+    </div>
     <div class="ttr"><span class="ttl">Placa</span><span class="ttv">${d.placa}</span></div>
     <div class="ttr"><span class="ttl">Transportadora</span><span class="ttv">${d.transportadora}</span></div>
     <div class="ttr"><span class="ttl">Operação</span><span class="ttv">${d.operation}</span></div>
     <div class="ttr"><span class="ttl">Mile</span><span class="ttv">${d.mile}</span></div>
-    <div class="ttr"><span class="ttl">Qtd Ship.</span><span class="ttv">${d.qty||'—'}</span></div>
-    ${d.stay?`<div class="ttr"><span class="ttl">Permanência</span><span class="ttv" style="color:${parseFloat(d.stay)>30?'#ff4444':'#00e676'}">${d.stay} min</span></div>`:''}
-    ${d.monitor?`<div class="tttm" style="color:${col}">${fmt(sec)}</div><div style="text-align:center;font-family:var(--fmono);font-size:9px;color:var(--dim);margin-top:2px">/ meta 30:00</div>`
-    :'<div style="text-align:center;margin-top:8px;font-family:var(--fmono);font-size:10px;color:#1a6b3a">— Doca Disponível —</div>'}`;
-  tt.classList.add('show');mvTT(e);
+    ${d.stay?`<div class="ttr"><span class="ttl">Permanência YMS</span><span class="ttv" style="color:${parseFloat(d.stay)>30?'#ff4444':'#00e676'}">${d.stay} min</span></div>`:''}
+    ${d.monitor
+      ? `<div class="tttm" style="color:${col}">${fmt(sec)}</div>
+         <div style="text-align:center;font-family:var(--fmono);font-size:9px;color:var(--dim);margin-top:2px">/ meta 30:00</div>`
+      : '<div style="text-align:center;margin-top:8px;font-family:var(--fmono);font-size:10px;color:#1a6b3a">— Doca Disponível —</div>'
+    }`;
+  tt.classList.add('show'); mvTT(e);
 }
-function mvTT(e){const tt=document.getElementById('tt');let x=e.clientX+14,y=e.clientY-20;if(x+240>window.innerWidth)x=e.clientX-250;if(y+200>window.innerHeight)y=e.clientY-210;tt.style.left=x+'px';tt.style.top=y+'px';}
+function mvTT(e){
+  const tt=document.getElementById('tt');
+  let x=e.clientX+14, y=e.clientY-20;
+  if(x+240>window.innerWidth) x=e.clientX-250;
+  if(y+200>window.innerHeight) y=e.clientY-210;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
 function hideTT(){document.getElementById('tt').classList.remove('show');}
 
-// ── MODAL DETALHE ────────────────────────────────────────────
+// ── MODAL ────────────────────────────────────────────────────
 function openMod(id){
-  const d=docas[id-1],sec=el(d);
+  const d=docas[id-1], sec=elapsed(d);
   const col=!d.monitor?'#4cff8a':tier(sec)==='critical'?'#ff4444':tier(sec)==='warn'?'#ffea00':'#00e676';
+  const f2=dt=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
   const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(5,8,15,.9);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;animation:fi .2s ease';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(5,8,15,.9);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center';
   ov.onclick=e=>{if(e.target===ov)ov.remove();};
-  const fmt2=(dt)=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
-  ov.innerHTML=`<div style="background:#0b1120;border:1px solid #1a2540;border-radius:6px;width:460px;max-width:95vw;overflow:hidden">
-    <div style="padding:14px 20px;border-bottom:1px solid #1a2540;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff">
-        Doca ${d.label} <span style="font-size:11px;color:${col};margin-left:8px">${SL[d.status]||d.status}</span>
-      </div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:transparent;border:1px solid #1a2540;color:#5a7090;font-size:14px;width:26px;height:26px;cursor:pointer;border-radius:2px">✕</button>
-    </div>
-    <div style="padding:16px 20px">
-      <!-- timer -->
-      <div style="background:rgba(0,0,0,.4);border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#5a7090;margin-bottom:2px">Tempo no Status</div>
-          <div style="font-family:var(--fmono);font-size:36px;font-weight:700;color:${col};letter-spacing:3px">${d.monitor?fmt(sec):'—'}</div>
+  ov.innerHTML=`
+    <div style="background:#0b1120;border:1px solid #1a2540;border-radius:6px;width:460px;max-width:95vw;overflow:hidden">
+      <div style="padding:14px 20px;border-bottom:1px solid #1a2540;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff">
+          Doca ${d.label} <span style="font-size:11px;color:${col};margin-left:8px">${SL[d.status]||d.status}</span>
         </div>
-        <div style="text-align:right">
-          <div style="font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">Permanência YMS</div>
-          <div style="font-family:var(--fmono);font-size:22px;font-weight:700;color:${d.stay&&parseFloat(d.stay)>30?'#ff4444':'#4cff8a'}">${d.stay?d.stay+' min':'—'}</div>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:transparent;border:1px solid #1a2540;color:#5a7090;font-size:14px;width:26px;height:26px;cursor:pointer;border-radius:2px">✕</button>
+      </div>
+      <div style="padding:16px 20px">
+        <div style="background:rgba(0,0,0,.4);border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-family:var(--fmono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#5a7090;margin-bottom:2px">Tempo no Status</div>
+            <div style="font-family:var(--fmono);font-size:36px;font-weight:700;color:${col};letter-spacing:3px">${d.monitor?fmt(sec):'—'}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">Permanência YMS</div>
+            <div style="font-family:var(--fmono);font-size:22px;font-weight:700;color:${d.stay&&parseFloat(d.stay)>30?'#ff4444':'#4cff8a'}">${d.stay?d.stay+' min':'—'}</div>
+          </div>
+        </div>
+        ${d.monitor?`
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">
+            <span>0</span><span style="color:#ffea00">20 min ⚠</span><span style="color:#ff4444">30 min 🚨</span>
+          </div>
+          <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px">
+            <div style="height:100%;width:${Math.min(100,(sec/TC)*100)}%;background:${col};border-radius:3px;transition:width 1s"></div>
+          </div>
+        </div>`:''}
+        <div class="det-grid">
+          ${[['Placa',d.placa],['Transportadora',d.transportadora],
+             ['Veículo',d.veiculo],['Operação',d.operation],
+             ['Mile',d.mile],['Gate Checkin',f2(d.gateIn)],
+             ['Gate Checkout',f2(d.gateOut)],['Meta OnTime','30:00 min']]
+            .map(([l,v])=>`<div class="det-item"><div class="det-lbl">${l}</div><div class="det-val">${v}</div></div>`)
+            .join('')}
         </div>
       </div>
-      <!-- progress bar -->
-      ${d.monitor?`<div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;font-family:var(--fmono);font-size:9px;color:#5a7090;margin-bottom:4px">
-          <span>0</span><span style="color:#ffea00">20 min ⚠</span><span style="color:#ff4444">30 min 🚨</span></div>
-        <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px">
-          <div style="height:100%;width:${Math.min(100,(sec/TC)*100)}%;background:${col};border-radius:3px;transition:width 1s"></div>
-        </div></div>`:''}
-      <!-- fields grid -->
-      <div class="det-grid">
-        ${[['Placa',d.placa],['Transportadora',d.transportadora],['Operação',d.operation],['Mile',d.mile],
-           ['Qtd Shipments',d.qty||'—'],['Rota',d.rota],
-           ['Gate Checkin',fmt2(d.gateIn)],['Gate Checkout',fmt2(d.gateOut)],
-           ['Doca Checkin',fmt2(d.dckIn)],['Doca Checkout',fmt2(d.dckOut)],
-           ['Veículo',d.veiculo],['Meta OnTime','30:00 min']]
-          .map(([l,v])=>`<div class="det-item"><div class="det-lbl">${l}</div><div class="det-val">${v}</div></div>`).join('')}
-      </div>
-    </div></div>`;
+    </div>`;
   document.body.appendChild(ov);
 }
 
 // ── HISTÓRICO ────────────────────────────────────────────────
 function renderHist(){
   const b=document.getElementById('hbody');
-  if(!histData||!histData.length){b.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--dim);padding:30px">Sem dados históricos disponíveis</td></tr>';return;}
+  if(!histData.length){
+    b.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--dim);padding:30px">Sem dados históricos</td></tr>';
+    return;
+  }
   const pc={'AM1':'pAM1','PM1':'pPM1','AM2':'pAM2','PM2':'pPM2','MN':'pMN'};
   b.innerHTML=histData.map(h=>{
     const c=h.pctOntime>=70?'#00e676':h.pctOntime>=50?'#ffea00':'#ff4444';
     const tc=h.stayAvg<=30?'#00e676':h.stayAvg<=45?'#ffea00':'#ff4444';
-    return`<tr>
+    return `<tr>
       <td>${h.date}</td>
       <td><span class="pill ${pc[h.turno]||'pMN'}">${h.turno}</span></td>
       <td style="font-family:var(--fmono)">${h.total}</td>
-      <td style="font-family:var(--fmono)">${h.comCheckout}</td>
+      <td style="font-family:var(--fmono)">${h.comSaida}</td>
       <td style="font-family:var(--fmono);color:${tc}">${h.stayAvg} min</td>
       <td style="font-family:var(--fmono);color:#00e676">${h.dentro30}</td>
       <td style="font-family:var(--fmono);color:#ff4444">${h.acima30}</td>
-      <td><div style="display:flex;align-items:center;gap:6px">
-        <div style="flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px">
-          <div style="height:100%;width:${Math.min(100,h.pctOntime)}%;background:${c};border-radius:2px"></div>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px">
+            <div style="height:100%;width:${Math.min(100,h.pctOntime)}%;background:${c};border-radius:2px"></div>
+          </div>
+          <span style="font-family:var(--fmono);font-size:10px;color:${c};min-width:34px">${h.pctOntime}%</span>
         </div>
-        <span style="font-family:var(--fmono);font-size:10px;color:${c};min-width:34px">${h.pctOntime}%</span>
-      </div></td>
-    </tr>`;}).join('');
+      </td>
+    </tr>`;
+  }).join('');
 }
 
-// ── DETALHE RAW YMS ──────────────────────────────────────────
-function renderDetalhe(){
-  const body=document.getElementById('dbody');
+// ── DETALHE ──────────────────────────────────────────────────
+function renderDet(){
+  const b=document.getElementById('dbody');
   const srch=(document.getElementById('srch').value||'').toLowerCase();
-  const rows=docas.filter(d=>d.monitor||d.gateIn).filter(d=>{
-    if(!srch)return true;
-    return(d.placa+d.rota+d.transportadora+d.operation).toLowerCase().includes(srch);
+  const rows=docas.filter(d=>d.placa!=='—').filter(d=>{
+    if(!srch) return true;
+    return (d.placa+d.transportadora+d.operation+d.mile+d.veiculo).toLowerCase().includes(srch);
   });
-  if(!rows.length){body.innerHTML='<tr><td colspan="12" style="text-align:center;color:var(--dim);padding:20px">Sem registros</td></tr>';return;}
-  const f2=(dt)=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
-  const stay2=(s)=>s?`<span style="color:${parseFloat(s)>30?'#ff4444':'#00e676'}">${s} min</span>`:'—';
-  body.innerHTML=rows.map(d=>`<tr>
+  if(!rows.length){b.innerHTML='<tr><td colspan="12" style="text-align:center;color:var(--dim);padding:20px">Sem registros</td></tr>';return;}
+  const f2=dt=>dt?new Date(dt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
+  b.innerHTML=rows.map(d=>`<tr>
     <td style="font-family:var(--fmono);font-weight:700">${d.label}</td>
     <td style="font-family:var(--fmono)">${d.placa}</td>
     <td>${d.transportadora}</td>
@@ -711,67 +696,98 @@ function renderDetalhe(){
     <td style="font-family:var(--fmono)">${d.mile}</td>
     <td style="font-family:var(--fmono)">${f2(d.gateIn)}</td>
     <td style="font-family:var(--fmono)">${f2(d.gateOut)}</td>
-    <td style="font-family:var(--fmono)">${f2(d.dckIn)}</td>
-    <td style="font-family:var(--fmono)">${f2(d.dckOut)}</td>
-    <td>${stay2(d.stay)}</td>
+    <td style="font-family:var(--fmono)">—</td>
+    <td style="font-family:var(--fmono)">—</td>
+    <td>${d.stay?`<span style="color:${parseFloat(d.stay)>30?'#ff4444':'#00e676'}">${d.stay} min</span>`:'—'}</td>
     <td style="font-family:var(--fmono)">${d.qty||'—'}</td>
-    <td style="font-family:var(--fmono);font-size:9px">${d.rota}</td>
+    <td>${d.veiculo}</td>
   </tr>`).join('');
 }
 
 // ── ALERTS ──────────────────────────────────────────────────
 function pushAl(d,sec){
-  const k=`${d.id}_${Math.floor(sec/60)}`;if(aled.has(k))return;aled.add(k);
+  const k=`${d.id}_${Math.floor(sec/60)}`;
+  if(aled.has(k)) return; aled.add(k);
   const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   alLog.unshift({t,id:d.id,label:d.label,placa:d.placa,sec});
-  if(alLog.length>60)alLog.pop();renderAl();
+  if(alLog.length>60) alLog.pop();
+  renderAl();
 }
 function renderAl(){
-  const l=document.getElementById('apl'),b=document.getElementById('apb');
+  const l=document.getElementById('apl'), b=document.getElementById('apb');
   b.textContent=alLog.length;
-  l.innerHTML=alLog.map(a=>`<div class="apr"><span class="aptm">${a.t}</span><span class="apdc">D-${String(a.label).padStart(2,'0')}</span><span class="apmg">Placa: ${a.placa}</span><span class="apel">${fmt(a.sec)}</span></div>`).join('');
+  l.innerHTML=alLog.map(a=>`
+    <div class="apr">
+      <span class="aptm">${a.t}</span>
+      <span class="apdc">D-${String(a.label).padStart(2,'0')}</span>
+      <span class="apmg">Placa: ${a.placa}</span>
+      <span class="apel">${fmt(a.sec)}</span>
+    </div>`).join('');
 }
 function clrAl(){alLog=[];aled.clear();renderAl();}
 
 // ── EXPORTS ─────────────────────────────────────────────────
 function expCSV(){
-  const h=['Doca','Status','Placa','Transportadora','Operacao','Mile','GateCheckin','GateCheckout','DocaCheckin','DocaCheckout','Permanencia_min','QtdShip','Rota'];
-  const rows=docas.map(d=>[d.label,d.status,d.placa,d.transportadora,d.operation,d.mile,
+  const h=['Doca','Status','Placa','Transportadora','Veiculo','Operacao','Mile','GateCheckin','GateCheckout','Permanencia_min','StayYMS'];
+  const rows=docas.map(d=>[d.label,d.status,d.placa,d.transportadora,d.veiculo,d.operation,d.mile,
     d.gateIn?new Date(d.gateIn).toLocaleTimeString('pt-BR'):'',
     d.gateOut?new Date(d.gateOut).toLocaleTimeString('pt-BR'):'',
-    d.dckIn?new Date(d.dckIn).toLocaleTimeString('pt-BR'):'',
-    d.dckOut?new Date(d.dckOut).toLocaleTimeString('pt-BR'):'',
-    d.stay||'',d.qty||'',d.rota].join(','));
+    d.inicio?(elapsed(d)/60).toFixed(1):'',
+    d.stay||''].join(','));
   dl([h.join(','),...rows].join('\n'),`SMG15_YMS_${new Date().toISOString().slice(0,10)}.csv`);
 }
 function expHist(){
-  const h=['Data','Turno','Total','ComCheckout','StayAvg_min','Dentro30','Acima30','PctOntime'];
-  const rows=(histData||[]).map(r=>[r.date,r.turno,r.total,r.comCheckout,r.stayAvg,r.dentro30,r.acima30,r.pctOntime].join(','));
+  const h=['Data','Turno','Total','ComSaida','StayAvg','Dentro30','Acima30','PctOntime'];
+  const rows=histData.map(r=>[r.date,r.turno,r.total,r.comSaida,r.stayAvg,r.dentro30,r.acima30,r.pctOntime].join(','));
   dl([h.join(','),...rows].join('\n'),`SMG15_historico_${new Date().toISOString().slice(0,10)}.csv`);
 }
-function expRaw(){expCSV();}
-function dl(csv,nm){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=nm;a.click();}
-
-// ── UTILS ────────────────────────────────────────────────────
-function el(d){if(!d.inicio)return 0;return Math.max(0,Math.floor((Date.now()-d.inicio)/1000));}
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-function tier(s){if(s>=TC)return'critical';if(s>=TW)return'warn';return'ok';}
-function showCfgPanel(){
-  const p=document.getElementById('cfg-panel');
-  if(p){ p.style.background='rgba(255,107,53,0.1)'; p.style.borderColor='rgba(255,107,53,0.4)'; }
-  document.getElementById('sheetId')?.focus();
+function dl(csv,nm){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=nm; a.click();
 }
 
-function showLov(t){document.getElementById('ltx').textContent=t;document.getElementById('lov').classList.remove('hidden');}
-function hideLov(){document.getElementById('lov').classList.add('hidden');}
-function showErr(m){document.getElementById('emsg').textContent=m;document.getElementById('eb').classList.add('show');}
-function setApi(s,t){const d=document.getElementById('adot'),l=document.getElementById('astat');d.className='adot '+s;l.textContent=t;l.style.color=s==='ok'?'var(--ok)':s==='err'?'var(--alert)':'var(--warn)';}
+// ── DEMO FALLBACK ────────────────────────────────────────────
+function loadDemo(){
+  const sts=['livre','livre','aduana','contagem','gaiola','finalizado','expedida'];
+  docas=Array.from({length:TOTAL},(_,i)=>{
+    const n=i+1,st=sts[i%sts.length],mon=!['livre','expedida'].includes(st);
+    return{id:n,label:String(n).padStart(2,'0'),status:st,monitor:mon,
+      inicio:mon?Date.now()-Math.floor(Math.random()*38)*60000:null,
+      placa:`ABC-${1000+n}`,veiculo:'Truck',transportadora:'Transportes Demo',
+      operation:'service_center',mile:'last_mile',qty:0,
+      stay:mon?Math.floor(Math.random()*45):null,
+      gateIn:null,gateOut:null,dckIn:null,dckOut:null,rota:'—'};
+  });
+  document.getElementById('st').textContent='(demo)';
+  renderFloor(); updateSum();
+}
 
+// ── UTILS ────────────────────────────────────────────────────
+function parseDate(v){
+  if(!v || v==='') return null;
+  try { const d=new Date(v); return isNaN(d)?null:d.getTime(); } catch(e){ return null; }
+}
+function elapsed(d){ if(!d.inicio) return 0; return Math.max(0,Math.floor((Date.now()-d.inicio)/1000)); }
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function tier(s){ if(s>=TC) return 'critical'; if(s>=TW) return 'warn'; return 'ok'; }
+function showLov(t){ document.getElementById('ltx').textContent=t; document.getElementById('lov').classList.remove('hidden'); }
+function hideLov(){ document.getElementById('lov').classList.add('hidden'); }
+function showErr(m){ document.getElementById('emsg').textContent=m; document.getElementById('eb').classList.add('show'); }
+function setApi(s,t){
+  const d=document.getElementById('adot'),l=document.getElementById('astat');
+  d.className='adot '+s; l.textContent=t;
+  l.style.color=s==='ok'?'var(--ok)':s==='err'?'var(--alert)':'var(--warn)';
+}
+
+// ── INIT ─────────────────────────────────────────────────────
 window.addEventListener('load',()=>{
-  // Restaura Sheet ID salvo
-  const saved=localStorage.getItem('smg15_sheet_id');
-  if(saved){ const el=document.getElementById('sheetId'); if(el) el.value=saved; SHEET_ID=saved; }
-  docas=Array.from({length:TOTAL},(_,i)=>({id:i+1,label:String(i+1).padStart(2,'0'),status:'livre',monitor:false,inicio:null,rota:'—',placa:'—',veiculo:'—',transportadora:'—',operation:'—',mile:'—',qty:0,stay:null,gateIn:null,gateOut:null,dckIn:null,dckOut:null}));
+  docas=Array.from({length:TOTAL},(_,i)=>({
+    id:i+1, label:String(i+1).padStart(2,'0'), status:'livre', monitor:false,
+    inicio:null, rota:'—', placa:'—', veiculo:'—', transportadora:'—',
+    operation:'—', mile:'—', qty:0, stay:null,
+    gateIn:null, gateOut:null, dckIn:null, dckOut:null
+  }));
   renderFloor();
   loadData();
 });
